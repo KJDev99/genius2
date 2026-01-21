@@ -1,0 +1,16 @@
+import ContactConsultation from '@/components/home/ContactConsultation'
+import RecentReviews from '@/components/Reviews/recent-reviews'
+import ReviewHero from '@/components/Reviews/review-hero'
+import React from 'react'
+
+export default function page() {
+  return (
+    <div>
+        <ReviewHero/>
+        <RecentReviews/>
+        <div  className='max-sm:hidden'>
+        <ContactConsultation/>
+        </div>
+    </div>
+  )
+}

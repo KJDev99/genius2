@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import "tailwindcss";
+body{
+    font-family: "Inter", sans-serif;
+}
+
+/* globals.css yoki component CSS */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.AboutHeader{
+  background: url('/abouthero.png') center/cover no-repeat;
+}
+.Catalohhero{
+  background: url('/cataloghero.png') center/cover no-repeat;
+}
