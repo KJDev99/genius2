@@ -1,10 +1,35 @@
 'use client';
 import Image from 'next/image';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { LiaArrowLeftSolid, LiaArrowRightSolid } from "react-icons/lia";
+import { useApiStore } from '@/store/useApiStore';
 
 export default function Brands() {
   const scrollContainerRef = useRef(null);
+  const { getData } = useApiStore()
+  const [partners, setPartners] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const fetchPartners = async () => {
+      setLoading(true)
+      setError(null)
+
+      const result = await getData('sites/partners/')
+
+      // getData { success: true, data: [...] } qaytaradi
+      if (result?.success && result?.data && Array.isArray(result.data)) {
+        setPartners(result.data)
+      } else {
+        setError('Ma\'lumot yuklanmadi')
+      }
+
+      setLoading(false)
+    }
+
+    fetchPartners()
+  }, []);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -25,59 +50,98 @@ export default function Brands() {
   };
 
   return (
-    <div className="max-w-[1340px] mx-auto mt-16">
-      <div className=" flex items-center justify-between">
-        <button
-          onClick={scrollLeft}
-          className="hidden md:flex h-12 w-12 justify-center items-center rounded-full bg-gray-400 hover:bg-gray-500 z-10 "
-          aria-label="Oldingi brendlar"
-        >
-          <LiaArrowLeftSolid size={28} className="text-white" />
-        </button>
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory "
-        >
-          <div className="w-[203px] h-[127px] flex justify-center items-center rounded-[16px] bg-gradient-to-br from-[#D8C19A] to-[#C3974C] flex-shrink-0 snap-center">
-            <Image src="/sec4.png" height={32.25} width={73.5} alt="Brand 1" />
-          </div>
-          <div className="w-[203px] h-[127px] flex justify-center items-center rounded-[16px] bg-[#DDDDDD] flex-shrink-0 snap-center">
-            <Image src="/sec5.png" height={39} width={126.75} alt="Brand 2" />
-          </div>
-          <div className="w-[203px] h-[127px] flex justify-center items-center rounded-[16px] bg-[#DDDDDD] flex-shrink-0 snap-center">
-            <Image src="/sec6.png" height={27} width={119.25} alt="Brand 3" />
-          </div>
-          <div className="w-[203px] h-[127px] flex justify-center items-center rounded-[16px] bg-[#DDDDDD] flex-shrink-0 snap-center">
-            <Image src="/sec7.png" height={24} width={130.5} alt="Brand 4" />
-          </div>
-          <div className="w-[203px] h-[127px] flex justify-center items-center rounded-[16px] bg-[#DDDDDD] flex-shrink-0 snap-center">
-            <Image src="/sec8.png" height={18} width={155.25} alt="Brand 5" />
-          </div>
+    <div className="max-w-[1340px] mx-auto mt-16 px-4">
+      {loading && (
+        <div className='text-center py-10'>
+          <p className='text-gray-500'>Загрузка партнеров...</p>
         </div>
-        <button
-          onClick={scrollRight}
-          className="hidden md:flex h-12 w-12 justify-center items-center rounded-full bg-gradient-to-br from-[#D8C19A] to-[#C3974C] hover:opacity-90  z-10  "
-          aria-label="Keyingi brendlar"
-        >
-          <LiaArrowRightSolid size={28} className="text-white" />
-        </button>
-      </div>
-      <div className="flex justify-center gap-[16px] mt-4 md:hidden">
-        <button
-          onClick={scrollLeft}
-          className="h-12 w-12 flex justify-center items-center rounded-full bg-gray-400 hover:bg-gray-500"
-          aria-label="Oldingi brendlar"
-        >
-          <LiaArrowLeftSolid size={28} className="text-white" />
-        </button>
-        <button
-          onClick={scrollRight}
-          className="h-12 w-12 flex justify-center items-center rounded-full bg-gradient-to-br from-[#D8C19A] to-[#C3974C] hover:opacity-90 transition-opacity"
-          aria-label="Keyingi brendlar"
-        >
-          <LiaArrowRightSolid size={28} className="text-white" />
-        </button>
-      </div>
+      )}
+
+      {error && (
+        <div className='text-center py-10'>
+          <p className='text-red-500'>Ошибка загрузки партнеров</p>
+        </div>
+      )}
+
+      {!loading && !error && partners.length > 0 && (
+        <>
+          <div className="flex items-center justify-between gap-x-4">
+            <button
+              onClick={scrollLeft}
+              className="hidden md:flex h-12 w-12 shrink-0 justify-center items-center rounded-full bg-gray-400 hover:bg-gray-500 z-10 transition-colors"
+              aria-label="Oldingi brendlar"
+            >
+              <LiaArrowLeftSolid size={28} className="text-white" />
+            </button>
+
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {partners.map((partner, index) => (
+                <div
+                  key={partner.id}
+                  className={`w-[203px] h-[127px] flex justify-center items-center rounded-[16px] flex-shrink-0 snap-center hover:bg-gradient-to-br hover:from-[#D8C19A] hover:to-[#C3974C] bg-[#DDDDDD] transition-all
+                    }`}
+                >
+                  <div className="relative w-full h-full flex items-center justify-center p-4">
+                    <Image
+                      src={partner.image}
+                      width={130}
+                      height={50}
+                      alt={`Partner ${partner.id}`}
+                      className="max-w-full max-h-full object-contain"
+                      onError={(e) => {
+                        e.target.src = '/placeholder-brand.png';
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={scrollRight}
+              className="hidden md:flex shrink-0 h-12 w-12 justify-center items-center rounded-full bg-gradient-to-br from-[#D8C19A] to-[#C3974C] hover:opacity-90 z-10 transition-opacity"
+              aria-label="Keyingi brendlar"
+            >
+              <LiaArrowRightSolid size={28} className="text-white" />
+            </button>
+          </div>
+
+          {/* Mobile tugmalari */}
+          <div className="flex justify-center gap-[16px] mt-4 md:hidden">
+            <button
+              onClick={scrollLeft}
+              className="h-12 w-12 flex justify-center items-center rounded-full bg-gray-400 hover:bg-gray-500 transition-colors"
+              aria-label="Oldingi brendlar"
+            >
+              <LiaArrowLeftSolid size={28} className="text-white" />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="h-12 w-12 flex justify-center items-center rounded-full bg-gradient-to-br from-[#D8C19A] to-[#C3974C] hover:opacity-90 transition-opacity"
+              aria-label="Keyingi brendlar"
+            >
+              <LiaArrowRightSolid size={28} className="text-white" />
+            </button>
+          </div>
+        </>
+      )}
+
+      {!loading && !error && partners.length === 0 && (
+        <div className='text-center py-10'>
+          <p className='text-gray-500'>Партнеры не найдены</p>
+        </div>
+      )}
+
+      {/* Scrollbar yashirish uchun CSS */}
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }

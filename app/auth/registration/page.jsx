@@ -1,58 +1,203 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
-import Button from '@/components/ui/Buttom';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Eye, EyeOff } from 'lucide-react'
+import toast from 'react-hot-toast'
+import Link from 'next/link'
+import Button from '@/components/ui/Buttom'
+import { useApiStore } from '@/store/useApiStore'
 
 export default function Registration() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter()
+  const { postData, loading } = useApiStore()
+
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    phone: '',
+    email: '',
+    password: '',
+    password_confirm: '',
+    terms_accepted: false
+  })
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const validateForm = () => {
+    if (!formData.first_name.trim()) {
+      toast.error('Введите имя')
+      return false
+    }
+
+    if (!formData.last_name.trim()) {
+      toast.error('Введите фамилию')
+      return false
+    }
+
+    if (!formData.phone.trim()) {
+      toast.error('Введите номер телефона')
+      return false
+    }
+
+    if (!formData.email.trim()) {
+      toast.error('Введите email')
+      return false
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Неверный формат email')
+      return false
+    }
+
+    if (!formData.password) {
+      toast.error('Введите пароль')
+      return false
+    }
+
+    if (formData.password.length < 8) {
+      toast.error('Пароль должен содержать минимум 8 символов')
+      return false
+    }
+
+    if (formData.password !== formData.password_confirm) {
+      toast.error('Пароли не совпадают')
+      return false
+    }
+
+    if (!formData.terms_accepted) {
+      toast.error('Примите условия и положения')
+      return false
+    }
+
+    return true
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!validateForm()) {
+      return
+    }
+
+    // Prepare data for API (without terms_accepted)
+    const { terms_accepted, ...apiData } = formData
+
+    // Submit
+    const result = await postData('/accounts/register/', apiData)
+
+    if (result && !result.error) {
+      toast.success('Регистрация успешна! Проверьте email для подтверждения.')
+
+      // Reset form
+      setFormData({
+        first_name: '',
+        last_name: '',
+        phone: '',
+        email: '',
+        password: '',
+        password_confirm: '',
+        terms_accepted: false
+      })
+
+      // Redirect to login or email verification page
+      setTimeout(() => {
+        router.push('/auth/login')
+      }, 2000)
+    } else {
+      // Handle specific errors
+      if (result?.email) {
+        toast.error(result.email[0] || 'Email уже используется')
+      } else if (result?.phone) {
+        toast.error(result.phone[0] || 'Телефон уже используется')
+      } else if (result?.password) {
+        toast.error(result.password[0] || 'Некорректный пароль')
+      } else {
+        toast.error(result?.detail || 'Ошибка регистрации. Попробуйте снова.')
+      }
+    }
+  }
 
   return (
-    <div className=' max-w-[581px] mx-auto'>
-        <h2 className='mb-[48px] mt-[79px] font-semibold text-[32px] leading-[48px] tracking-[-0.04em]'>Регистрация</h2>
-    <div className=" ">
-      <form className="space-y-[16px]">
-        <div className="grid grid-cols-2 gap-[16px]">
+    <div className='max-w-[581px] mx-auto px-4'>
+      <h2 className='mb-[32px] md:mb-[48px] mt-[50px] md:mt-[79px] font-semibold text-[28px] md:text-[32px] leading-[1.5] tracking-[-0.04em]'>
+        Регистрация
+      </h2>
+
+      <form onSubmit={handleSubmit} className="space-y-[16px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
           <div>
             <input
               type="text"
+              name="first_name"
+              value={formData.first_name}
+              onChange={handleInputChange}
               placeholder="Ваше имя"
-              className="w-[282px] px-6 h-[66px]  text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+              required
             />
           </div>
           <div>
             <input
               type="text"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleInputChange}
               placeholder="Ваша фамилия"
-              className="w-[282px] px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+              required
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-[16px]">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
           <div>
             <input
               type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
               placeholder="Номер телефона"
-              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+              required
             />
           </div>
           <div>
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="E-mail"
-              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+              required
             />
           </div>
         </div>
-        <p className="font-normal text-[12px] leading-[14px] tracking-[0%] text-end">
+
+        <p className="font-normal text-[12px] leading-[14px] text-end text-gray-600">
           На почту придет код для подтверждения
         </p>
+
         <div className="relative">
           <input
             type={showPassword ? 'text' : 'password'}
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
             placeholder="Введите пароль"
-            className="w-full px-6 h-[66px] pr-14 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            className="w-full px-6 h-[66px] pr-14 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+            required
           />
           <button
             type="button"
@@ -62,11 +207,16 @@ export default function Registration() {
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
+
         <div className="relative">
           <input
             type={showConfirmPassword ? 'text' : 'password'}
+            name="password_confirm"
+            value={formData.password_confirm}
+            onChange={handleInputChange}
             placeholder="Повторите пароль"
-            className="w-full px-6 h-[66px] pr-14 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            className="w-full px-6 h-[66px] pr-14 text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+            required
           />
           <button
             type="button"
@@ -76,14 +226,47 @@ export default function Registration() {
             {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
-        <div className='flex gap-[16px]'>
-            <input className='w-[30px] h-[30px]' type="checkbox" name="" id=""/>
-            <p className='font-normal text-[12px] leading-[100%] tracking-[0%]'>Входя в аккаунт или создавая новый, вы соглашаетесь с нашими Правилами и условиями и Положением о конфиденциальности</p>
+
+        <div className='flex gap-[16px] items-start'>
+          <input
+            type="checkbox"
+            name="terms_accepted"
+            checked={formData.terms_accepted}
+            onChange={handleInputChange}
+            className='w-[30px] h-[30px] accent-[#C9A76B] flex-shrink-0 mt-1'
+            required
+          />
+          <p className='font-normal text-[12px] leading-[140%]'>
+            Входя в аккаунт или создавая новый, вы соглашаетесь с нашими{' '}
+            <Link href="/terms" className="text-[#C9A76B] hover:underline">
+              Правилами и условиями
+            </Link>
+            {' '}и{' '}
+            <Link href="/privacy" className="text-[#C9A76B] hover:underline">
+              Положением о конфиденциальности
+            </Link>
+          </p>
         </div>
 
-      <Button text={'Зарегистрироваться'} className={`w-[581px] h-[66px] rounded-[12px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)]`}/>
+        <div className='flex justify-between items-center pt-4'>
+          <p className='font-normal text-[14px] md:text-[16px] text-[#27272799]'>
+            Уже есть аккаунт?
+          </p>
+          <Link
+            href={'/auth/login'}
+            className="font-inter hover:underline font-normal text-[14px] md:text-[16px] bg-gradient-to-r from-[#D8C19A] via-[#D8C19A] to-[#C3974C] bg-clip-text text-transparent"
+          >
+            Войти
+          </Link>
+        </div>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          text={loading ? 'Регистрация...' : 'Зарегистрироваться'}
+          className={`w-full h-[66px] rounded-[12px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+        />
       </form>
     </div>
-    </div>
-  );
+  )
 }

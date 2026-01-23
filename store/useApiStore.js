@@ -16,6 +16,7 @@ export const useApiStore = create((set) => ({
         try {
             const res = await api.get(endpoint);
             set({ data: res.data });
+            return { success: true, data: res.data };
         } catch (err) {
             set({ error: err?.response?.data || err });
         } finally {
@@ -54,6 +55,7 @@ export const useApiStore = create((set) => ({
         try {
             const res = await api.delete(endpoint);
             set({ data: res.data });
+
         } catch (err) {
             set({ error: err?.response?.data || err });
         } finally {

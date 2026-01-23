@@ -4,6 +4,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import MobileNavbar from "@/components/mobilni-nav";
 import PageTransition from "@/components/PageTransition";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -18,12 +19,19 @@ export default function RootLayout({ children }) {
       <body
         className={` antialiased`}
       >
-        <Navbar/>
-        <MobileNavbar/>
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          toastOptions={{
+            duration: 4000,
+          }}
+        />
+        <Navbar />
+        <MobileNavbar />
         <PageTransition>
           {children}
         </PageTransition>
-        <Footer/>
+        <Footer />
       </body>
     </html>
   );

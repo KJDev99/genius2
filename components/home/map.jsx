@@ -16,12 +16,12 @@ export default function Map() {
       </div>
       <div>
         <Image
-          src="/map.png"
-          width={500}
-          height={300}
+          src="/mainmap.svg"
+          width={1200}
+          height={600}
           alt="Map Image"
           className="w-full h-auto object-cover"
-        />
+        />h
       </div>
     </div>
   )

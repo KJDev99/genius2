@@ -1,19 +1,14 @@
 'use client'
-import LeftPanel from '@/components/profile/Dashboard/left-panel'
-import RightPanel from '@/components/profile/Dashboard/right-panel'
+import ProfileLayout from '@/components/profile/ProfileLayout'
 import React, { useState } from 'react'
+import KabenetBox from '@/components/profile/Lichniykabenet/kabenetBox'
 
 export default function Dashboard() {
     const [step, setStep] = useState(0)
 
     return (
-        <div className='flex gap-[30px] max-w-[1340px] m-auto'>
-            <div className="flex-shrink-0">
-                <LeftPanel step={step} setStep={setStep} />
-            </div>
-            <div className="flex-1 overflow-auto">
-                <RightPanel setStep={setStep} step={step} />
-            </div>
-        </div>
+        <ProfileLayout>
+            <KabenetBox />
+        </ProfileLayout>
     )
 }

@@ -11,9 +11,9 @@ export default function Catalog() {
     <div>
       <CatalogHero />
       <Cabel />
-      <NewProduct />
-      <ProductsBox display={'hidden'}/>
-        <ContactConsultation/>
+      {/* <NewProduct /> */}
+      <ProductsBox display={'hidden'} />
+      <ContactConsultation />
     </div>
   )
 }

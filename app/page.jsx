@@ -7,18 +7,24 @@ import Hero from '@/components/home/hero'
 import Map from '@/components/home/map'
 import ProductsBox from '@/components/home/products-box'
 import React from 'react'
+import { Toaster } from 'react-hot-toast'
 
 export default function page() {
   return (
     <div>
-      <Hero/>
-      <BuildCableBox/>
-      <ProductsBox/>
-      <Compony/>
-      <Compony2/>
-      <Brands/>
-      <Map/>
-      <ContactConsultation/>
+      <Hero />
+      <BuildCableBox />
+      <ProductsBox />
+      <Compony />
+      <Compony2 />
+      <Brands />
+      <Map />
+      <ContactConsultation />
+
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
     </div>
   )
 }
