@@ -9,6 +9,7 @@ import { useFavoritesStore } from '@/store/useFavoritesStore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+
 export default function Product({
     id,
     isNew,
@@ -31,6 +32,14 @@ export default function Product({
     const { addToCart } = useCartStore()
     const { toggleFavorite, isFavorite, addLocalFavorite, removeLocalFavorite } = useFavoritesStore()
     const router = useRouter()
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // LocalStorage'dan access_token'ni tekshirish
+        const token = localStorage.getItem("access_token");
+        setIsLoggedIn(!!token);
+    }, []);
+
 
     // Komponent mount bo'lganda like holatini tekshirish
     useEffect(() => {
@@ -120,26 +129,30 @@ export default function Product({
                     </div>
                 )}
 
-                <div
-                    className={`absolute right-4 max-md:right-2 border rounded-[6px] max-md:rounded-[4px] max-md:w-5.5 max-md:h-5.5 w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-300 z-10 ${isLiked
-                        ? 'text-[#C9A76B] border-[#C9A76B99] bg-[#F4EDE1]'
-                        : 'text-[#C9A76B] border-[#C9A76B99] hover:bg-[#F4EDE1] bg-white'
-                        } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (!loading) toggleLike();
-                    }}
-                    title={isLiked ? 'Удалить из избранного' : 'Добавить в избранное'}
-                >
-                    {loading ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#C9A76B]"></div>
-                    ) : isLiked ? (
-                        <IoHeart className='max-md:text-sm' />
-                    ) : (
-                        <IoHeartOutline className='max-md:text-sm' />
-                    )}
-                </div>
+                {
+                    isLoggedIn &&
+                    <div
+                        className={`absolute right-4 max-md:right-2 border rounded-[6px] max-md:rounded-[4px] max-md:w-5.5 max-md:h-5.5 w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-300 z-10 ${isLiked
+                            ? 'text-[#C9A76B] border-[#C9A76B99] bg-[#F4EDE1]'
+                            : 'text-[#C9A76B] border-[#C9A76B99] hover:bg-[#F4EDE1] bg-white'
+                            } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!loading) toggleLike();
+                        }}
+                        title={isLiked ? 'Удалить из избранного' : 'Добавить в избранное'}
+                    >
+                        {loading ? (
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#C9A76B]"></div>
+                        ) : isLiked ? (
+                            <IoHeart className='max-md:text-sm' />
+                        ) : (
+                            <IoHeartOutline className='max-md:text-sm' />
+                        )}
+                    </div>
+                }
+
 
                 <Image
                     src={img || '/sec.png'}

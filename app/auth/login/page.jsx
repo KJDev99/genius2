@@ -46,6 +46,8 @@ export default function Login() {
       localStorage.setItem('access_token', result.tokens.access)
       localStorage.setItem('refresh_token', result.tokens.refresh)
       localStorage.setItem('user', JSON.stringify(result.user))
+      // Navbar'ni yangilash uchun event yuborish
+      window.dispatchEvent(new Event("authChanged"))
       toast.success('Вход выполнен успешно!')
       setTimeout(() => {
         router.push('/')

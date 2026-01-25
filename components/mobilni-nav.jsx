@@ -17,6 +17,15 @@ export default function MobileNavbar() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     setIsLoggedIn(!!token);
+
+    // Auth holatini tinglash uchun event listener
+    const handleAuthChange = () => {
+      const token = localStorage.getItem("access_token");
+      setIsLoggedIn(!!token);
+    };
+
+    window.addEventListener("authChanged", handleAuthChange);
+    return () => window.removeEventListener("authChanged", handleAuthChange);
   }, []);
 
   useEffect(() => {
@@ -41,7 +50,11 @@ export default function MobileNavbar() {
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
     setIsLoggedIn(false);
+    // Navbar'ni yangilash uchun event yuborish
+    window.dispatchEvent(new Event("authChanged"));
     window.location.href = "/";
     setIsOpen(false);
   };
