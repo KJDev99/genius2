@@ -89,23 +89,22 @@ export default function RightPanel() {
   const perPageOptions = [12, 24, 48];
 
   return (
-    <div className=''>
+    <div className='w-full'>
       {/* Subkategoriyalar - LOADER YO'Q */}
       {subCategories.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-3">Выберите подкатегорию:</h3>
           <CableCategories />
         </div>
       )}
 
       {/* Filtr va sortirovka - LOADER YO'Q */}
-      <div className="flex gap-[48px] mt-[32px]">
-        <div className='flex gap-[16px]'>
+      <div className="flex gap-[48px] mt-[32px] max-md:flex-col max-md:gap-4 max-md:mt-6">
+        <div className='flex gap-[16px] max-md:grid max-md:grid-cols-2'>
           {/* Sort dropdown */}
           <div className="relative">
             <button
               onClick={() => setPopularOpen(!popularOpen)}
-              className="flex items-center justify-between w-[249px] h-[61px] px-5 py-3 text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition"
+              className="flex items-center justify-between max-md:w-full text-nowrap max-md:px-4  w-[249px] h-[61px] px-5 py-3 text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition"
             >
               {sortOptions.find(opt => opt.value === sortBy)?.label || 'Популярное'}
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,7 +133,7 @@ export default function RightPanel() {
           <div className="relative">
             <button
               onClick={() => setPerPageOpen(!perPageOpen)}
-              className="flex items-center justify-between w-[265px] h-[61px] px-5 py-3 text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition"
+              className="flex items-center justify-between max-md:w-full text-nowrap max-md:px-4  w-[265px] h-[61px] px-5 py-3 text-base text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:shadow-md transition"
             >
               Показать по {perPage}
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -161,11 +160,11 @@ export default function RightPanel() {
         </div>
 
         {/* Search input - LOADER YO'Q */}
-        <div className="relative">
+        <div className="relative max-md:col-span-2">
           <input
             type="text"
             placeholder="Найдите все, что вам нужно"
-            className="w-[421px] h-[61px] pl-[18px] pr-12 text-[18px] placeholder:text-[#B89B72] bg-gradient-to-br from-[#FDF9F2] to-[#F5EDE2] rounded-[12px] focus:outline-none"
+            className="w-[421px] max-md:w-full h-[61px] pl-[18px] pr-12 text-[18px] placeholder:text-[#B89B72] bg-gradient-to-br from-[#FDF9F2] to-[#F5EDE2] rounded-[12px] focus:outline-none"
             style={{
               border: "1px solid transparent",
               backgroundOrigin: "border-box",
@@ -201,7 +200,7 @@ export default function RightPanel() {
         ) : filteredProducts.length > 0 ? (
           // Products mavjud
           <>
-            <div className='grid grid-cols-3 gap-[24px]'>
+            <div className='grid grid-cols-3 gap-[24px] max-md:grid-cols-2 max-md:gap-4'>
               {filteredProducts.map((product) => (
                 <div key={product.id}>
                   <Product

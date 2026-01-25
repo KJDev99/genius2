@@ -48,7 +48,7 @@ export default function DashboardCatalog() {
   }, [categoryId, setMainCategoryId, fetchFilterData, fetchProducts]);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 max-w-[1340px] mx-auto">
+    <div className="min-h-screen  py-8 max-w-[1340px] mx-auto">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="mb-6">
@@ -72,14 +72,14 @@ export default function DashboardCatalog() {
           {mainCategoryName || 'Каталог товаров'}
         </h1>
 
-        <div className="flex gap-8">
+        <div className="grid grid-cols-4 gap-6 max-md:grid-cols-1">
           {/* Left Panel - Filters */}
-          <div className="w-1/4">
+          <div className=" col-span-1 max-md:w-full">
             <LeftPanel />
           </div>
 
           {/* Right Panel - Products */}
-          <div className="w-3/4">
+          <div className=" col-span-3 max-md:col-span-1">
             <RightPanel />
           </div>
         </div>

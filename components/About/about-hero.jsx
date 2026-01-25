@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function AboutHero() {
   return (
-    <div className='AboutHeader  h-[293px] mt-[44px]  max-md:mt-0 max-md:h-[180px] '>
+    <div className='AboutHeader h-[293px] mt-[44px] max-md:mt-0 max-md:h-[180px] '>
       <div className='pt-[128px] max-sm:ml-[16px] max-w-[1340px] m-auto max-md:pt-20'>
 
         <span className='font-normal flex text-[18px] max-sm:text-[16px] leading-[120%] tracking-[-0.04em]' >

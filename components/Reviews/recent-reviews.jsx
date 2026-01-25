@@ -4,24 +4,24 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 
 export default function RecentReviews() {
   return (
-    <div className='max-w-[1340px] m-auto max-sm:mr-[16px] max-sm:ml-[16px] '>
-      <h2 className=' text-[#27272799] mt-[100px] mb-[48px] font-normal text-[24px] leading-[100%] tracking-[-0.04em]'>Последние отзывы</h2>
-      <div className='grid grid-cols-2 max-sm:flex max-sm:flex-col  gap-[24px] items-center'>
+    <div className='max-w-[1340px] m-auto max-md:mr-[16px] max-md:ml-[16px] '>
+      <h2 className=' text-[#27272799] mt-[100px] mb-[48px] max-md:mt-[50px] max-md:mb-8 font-normal text-[24px] leading-[100%] tracking-[-0.04em]'>Последние отзывы</h2>
+      <div className='grid grid-cols-2 max-md:flex max-md:flex-col  gap-[24px] items-center'>
         <div>
           <Image src={'/sec12.png'} width={613} height={520} alt='sec12' />
         </div>
         <div className=''>
-          <p className='font-normal text-[24px] leading-[130%] tracking-[-0.04em]'>Покупал кабели в магазине Genius Electro — остался полностью доволен. Качество сразу чувствуется: плотная изоляция, аккуратные разъёмы, ничего не люфтит и не выглядит «дешёво». Подключил без проблем, всё работает стабильно, без потерь сигнала<br />
+          <p className='font-normal max-md:px-4 text-[24px] leading-[130%] tracking-[-0.04em] max-md:text-sm max-md:leading-[130%] '>Покупал кабели в магазине Genius Electro — остался полностью доволен. Качество сразу чувствуется: плотная изоляция, аккуратные разъёмы, ничего не люфтит и не выглядит «дешёво». Подключил без проблем, всё работает стабильно, без потерь сигнала<br />
             и нагрева</p>
           <br />
-          <br />
-          <p className='font-normal text-[24px] leading-[130%] tracking-[-0.04em]'>Отдельно отмечу сборку — видно, что кабели сделаны с расчётом на долгую эксплуатацию, а не «на один раз».</p>
-          <div className="flex items-center justify-between mt-[64px] px-6 ">
+          <br className='max-md:hidden' />
+          <p className='font-normal max-md:px-4 text-[24px] leading-[130%] tracking-[-0.04em] max-md:text-sm max-md:leading-[130%]'>Отдельно отмечу сборку — видно, что кабели сделаны с расчётом на долгую эксплуатацию, а не «на один раз».</p>
+          <div className="flex items-center justify-between mt-[64px] px-6 max-md:px-4 max-md:mt-8">
             <div className="flex items-center gap-[16px]">
-              <div className="w-[57px] h-[57px] rounded-full bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] " />
+              <div className="w-[57px] h-[57px] rounded-full bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] max-md:w-11 max-md:h-11 max-md:shrink-0" />
               <div>
-                <h3 className="font-normal text-[24px] leading-[120%] tracking-[-0.06em]">Антон Антонов</h3>
-                <p className="font-normal text-[18px] leading-[24px] tracking-[-0.06em] text-[#27272766]">CEO, XYZ Group</p>
+                <h3 className="font-normal text-[24px] leading-[120%] tracking-[-0.06em] max-md:text-[16px] text-[#272727]">Антон Антонов</h3>
+                <p className="font-normal text-[18px] leading-[24px] tracking-[-0.06em] text-[#27272766] max-md:text-sm">CEO, XYZ Group</p>
               </div>
             </div>
             <div className="flex items-center gap-4">

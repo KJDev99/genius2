@@ -17,7 +17,7 @@ export default function ContactConsultation() {
           onClick={() => setOpen(true)}
         >
           <Button
-            className={`mt-[32px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] w-[340px] h-[67px] rounded-[12px]`}
+            className={`mt-[32px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] w-[340px] h-[67px] rounded-[12px] max-md:h-[62px]`}
             text={'Оставить заявку на консультацию'} />
         </div>
       </div>

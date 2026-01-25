@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function Footer() {
   return (
     <footer className="border-t border-[#2727271A] mt-[120px] max-md:mt-[50px]">
-      <div className="max-w-[1340px] mx-auto px-4 py-[48px] flex justify-between items-start flex-col max-md:py-6">
+      <div className="max-w-[1340px] mx-auto px-4 py-[48px] flex justify-between items-start max-md:flex-col max-md:py-6">
         <Button text={'Заказать звонок'} className={`w-[203px] rounded-[12px] h-[51px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] max-md:w-full`} />
         <div className="text-sm text-[#272727] max-md:mt-6">
           <p className="mb-[20px] font-normal text-lg leading-tight tracking-minus-6">Адрес</p>

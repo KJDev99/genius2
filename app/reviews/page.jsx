@@ -6,11 +6,11 @@ import React from 'react'
 export default function page() {
   return (
     <div>
-        <ReviewHero/>
-        <RecentReviews/>
-        <div  className='max-sm:hidden'>
-        <ContactConsultation/>
-        </div>
+      <ReviewHero />
+      <RecentReviews />
+      <div className='max-md:hidden'>
+        <ContactConsultation />
+      </div>
     </div>
   )
 }

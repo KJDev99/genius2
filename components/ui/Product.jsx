@@ -77,7 +77,7 @@ export default function Product({
     return (
         <Link href={`/product/${id}`}>
             <div
-                className='p-4 relative rounded-[12px] h-[481px] transition-all duration-300 cursor-pointer w-[317px] max-md:p-2 max-md:rounded-[8px] max-md:h-max max-md:w-full'
+                className='p-4 relative rounded-[12px] h-[481px] transition-all duration-300 cursor-pointer w-full max-md:p-2 max-md:rounded-[8px] max-md:h-max max-md:w-full'
                 style={{ boxShadow: "0px 0px 4px 0px #76767626" }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}

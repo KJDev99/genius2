@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { AiOutlineMinus, AiOutlinePlus, AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Buttom';
 import { useCatalogStore } from '@/store/catalogStore';
+import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io';
 
 // Accordion Filter Component - MEMOIZED
 const AccordionFilter = React.memo(({ title, children, defaultOpen = false }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="w-[317px] rounded-md border border-gray-300 py-4 px-4 bg-white">
+    <div className=" w-full rounded-md border border-gray-300 py-4 px-4 bg-white max-md:w-full">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between text-base font-medium text-[#272727] hover:text-gray-700 transition-colors"
@@ -191,41 +192,6 @@ const PriceRangeFilter = React.memo(({ min, max, currentMin, currentMax, onChang
         />
       </div>
 
-      {/* Price Inputs */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex-1">
-          <label className="block text-xs font-medium text-gray-600 mb-1">От</label>
-          <div className="relative">
-            <input
-              type="number"
-              min={rangeMin.current}
-              max={currentMax - 10}
-              value={currentMin}
-              onChange={(e) => handleInputChange('min', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C3974C] focus:border-transparent"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">₽</span>
-          </div>
-        </div>
-
-        <div className="h-0.5 w-4 bg-gray-300 mt-5"></div>
-
-        <div className="flex-1">
-          <label className="block text-xs font-medium text-gray-600 mb-1">До</label>
-          <div className="relative">
-            <input
-              type="number"
-              min={currentMin + 10}
-              max={rangeMax.current}
-              value={currentMax}
-              onChange={(e) => handleInputChange('max', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#C3974C] focus:border-transparent"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-500">₽</span>
-          </div>
-        </div>
-      </div>
-
       {/* Price Display */}
       <div className="p-3 bg-gradient-to-br from-[#FDF9F2] to-[#F5EDE2] rounded-lg">
         <p className="text-center text-sm font-medium text-gray-700">
@@ -251,6 +217,7 @@ const LeftPanelContent = React.memo(() => {
   } = useCatalogStore();
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 100000 });
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
   const hasLoadedFilterData = useRef(false);
   const lastCategoryId = useRef(null);
 
@@ -331,7 +298,7 @@ const LeftPanelContent = React.memo(() => {
   // Loading state
   if (!filterData) {
     return (
-      <div className="w-[317px]">
+      <div className=" w-full max-md:w-full">
         <div className="animate-pulse space-y-4">
           <div className="h-[56px] bg-gray-200 rounded-lg"></div>
           <div className="h-[100px] bg-gray-200 rounded-lg"></div>
@@ -344,185 +311,205 @@ const LeftPanelContent = React.memo(() => {
   return (
     <div>
       {/* Header */}
-      <div className='items-center flex justify-between px-[18px] w-[317px] h-[56px] rounded-[10px] border border-[#27272733]'>
+      <div className='items-center flex justify-between px-[18px] w-full max-md:w-full h-[56px] rounded-[10px] border border-[#27272733] max-md:w-full'>
         <h2 className="font-inter text-[20px] font-normal leading-[20px] tracking-[-0.02em]">
           Фильтры
         </h2>
-        <button
-          onClick={handleReset}
-          className="font-inter text-[16px] font-normal leading-[18px] tracking-[0em] text-[#27272799] hover:text-gray-900 transition-colors"
-        >
-          Сбросить
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleReset}
+            className="hidden md:block font-inter text-[16px] font-normal leading-[18px] tracking-[0em] text-[#27272799] hover:text-gray-900 transition-colors"
+          >
+            Сбросить
+          </button>
+          <button
+            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            className="md:hidden"
+          >
+            {isFiltersOpen ? <IoIosArrowUp size={20} /> : <IoIosArrowDown size={20} />}
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
-      <div className='mt-[12px] gap-[12px] grid grid-cols-1'>
-        {/* Manufacturer Filter */}
-        {filterData.manufacturers?.length > 0 && (
-          <AccordionFilter title="Производитель" defaultOpen={true}>
-            <CheckboxGroup
-              options={filterData.manufacturers}
-              selected={parseFilterValues('manufacturer')}
-              onChange={(values) => handleFilterChange('manufacturer', values)}
-            />
-          </AccordionFilter>
+      <AnimatePresence initial={false}>
+        {isFiltersOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className='mt-[12px] gap-[12px] grid grid-cols-1'>
+              {/* Manufacturer Filter */}
+              {filterData.manufacturers?.length > 0 && (
+                <AccordionFilter title="Производитель" defaultOpen={true}>
+                  <CheckboxGroup
+                    options={filterData.manufacturers}
+                    selected={parseFilterValues('manufacturer')}
+                    onChange={(values) => handleFilterChange('manufacturer', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Cable Cross Section */}
+              {filterData.cable_cross_sections?.length > 0 && (
+                <AccordionFilter title="Сечение кабеля, мм²">
+                  <CheckboxGroup
+                    options={filterData.cable_cross_sections.map(s => s.toString())}
+                    selected={parseFilterValues('cable_cross_section')}
+                    onChange={(values) => handleFilterChange('cable_cross_section', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Number of Cores */}
+              {filterData.number_of_cores?.length > 0 && (
+                <AccordionFilter title="Количество жил">
+                  <CheckboxGroup
+                    options={filterData.number_of_cores.map(n => n.toString())}
+                    selected={parseFilterValues('number_of_cores')}
+                    onChange={(values) => handleFilterChange('number_of_cores', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Conductor Material */}
+              {filterData.conductor_materials?.length > 0 && (
+                <AccordionFilter title="Материал проводника">
+                  <CheckboxGroup
+                    options={filterData.conductor_materials}
+                    selected={parseFilterValues('conductor_material')}
+                    onChange={(values) => handleFilterChange('conductor_material', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Color */}
+              {filterData.colors?.length > 0 && (
+                <AccordionFilter title="Цвет">
+                  <CheckboxGroup
+                    options={filterData.colors}
+                    selected={parseFilterValues('color')}
+                    onChange={(values) => handleFilterChange('color', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Conductor Insulation Material */}
+              {filterData.conductor_insulation_materials?.length > 0 && (
+                <AccordionFilter title="Материал изоляции проводника">
+                  <CheckboxGroup
+                    options={filterData.conductor_insulation_materials}
+                    selected={parseFilterValues('conductor_insulation_material')}
+                    onChange={(values) => handleFilterChange('conductor_insulation_material', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Outer Insulation Material */}
+              {filterData.outer_insulation_materials?.length > 0 && (
+                <AccordionFilter title="Материал внешней изоляции">
+                  <CheckboxGroup
+                    options={filterData.outer_insulation_materials}
+                    selected={parseFilterValues('outer_insulation_material')}
+                    onChange={(values) => handleFilterChange('outer_insulation_material', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Outer Sheath Material */}
+              {filterData.outer_sheath_materials?.length > 0 && (
+                <AccordionFilter title="Материал внешней оболочки">
+                  <CheckboxGroup
+                    options={filterData.outer_sheath_materials}
+                    selected={parseFilterValues('outer_sheath_material')}
+                    onChange={(values) => handleFilterChange('outer_sheath_material', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* Model Version */}
+              {filterData.model_versions?.length > 0 && (
+                <AccordionFilter title="Модель/Исполнение">
+                  <CheckboxGroup
+                    options={filterData.model_versions}
+                    selected={parseFilterValues('model_version')}
+                    onChange={(values) => handleFilterChange('model_version', values)}
+                  />
+                </AccordionFilter>
+              )}
+
+              {/* New Products Toggle */}
+              <AccordionFilter title="Новые товары">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={filters.new || false}
+                    onChange={(e) => handleToggleFilter('new', e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-[#C3974C] focus:ring-[#C3974C]"
+                  />
+                  <span className="text-sm text-gray-700">Показать только новые</span>
+                </label>
+              </AccordionFilter>
+
+              {/* Popular Products Toggle */}
+              <AccordionFilter title="Популярные">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={filters.popular || false}
+                    onChange={(e) => handleToggleFilter('popular', e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-[#C3974C] focus:ring-[#C3974C]"
+                  />
+                  <span className="text-sm text-gray-700">Показать популярные</span>
+                </label>
+              </AccordionFilter>
+            </div>
+
+            {/* Price Range Filter */}
+            {filterData.price_range && (
+              <div className="mt-[12px]">
+                <AccordionFilter title="Цена (₽)" defaultOpen={true}>
+                  <PriceRangeFilter
+                    min={Math.floor(filterData.price_range.min)}
+                    max={Math.ceil(filterData.price_range.max)}
+                    currentMin={filters.min_price || Math.floor(filterData.price_range.min)}
+                    currentMax={filters.max_price || Math.ceil(filterData.price_range.max)}
+                    onChange={handlePriceChange}
+                  />
+                </AccordionFilter>
+              </div>
+            )}
+
+            {/* Register Banner */}
+            <div className=" w-full mt-[12px] max-md:hidden">
+              <div className="bg-white p-[24px] rounded-2xl shadow">
+                <div className="relative">
+                  <img
+                    src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1468&q=80"
+                    alt="Электрик провода режет"
+                    className="w-[269px] h-[79px] object-cover rounded-2xl"
+                  />
+                </div>
+                <div className="">
+                  <h3 className="text-xl font-semibold text-[#272727] mb-2 mt-[16px]">
+                    Про оформление заказа:
+                  </h3>
+                  <p className="font-normal text-sm leading-4 tracking-[-0.02em]">
+                    Перед добавлением товара в корзину, вам нужно зарегистрироваться на нашем сайте, чтобы оформить заказ
+                  </p>
+                </div>
+              </div>
+              <Button
+                className={' w-full h-[50px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] mt-4'}
+                text={'Зарегистрироваться'}
+              />
+            </div>
+          </motion.div>
         )}
-
-        {/* Cable Cross Section */}
-        {filterData.cable_cross_sections?.length > 0 && (
-          <AccordionFilter title="Сечение кабеля, мм²">
-            <CheckboxGroup
-              options={filterData.cable_cross_sections.map(s => s.toString())}
-              selected={parseFilterValues('cable_cross_section')}
-              onChange={(values) => handleFilterChange('cable_cross_section', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Number of Cores */}
-        {filterData.number_of_cores?.length > 0 && (
-          <AccordionFilter title="Количество жил">
-            <CheckboxGroup
-              options={filterData.number_of_cores.map(n => n.toString())}
-              selected={parseFilterValues('number_of_cores')}
-              onChange={(values) => handleFilterChange('number_of_cores', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Conductor Material */}
-        {filterData.conductor_materials?.length > 0 && (
-          <AccordionFilter title="Материал проводника">
-            <CheckboxGroup
-              options={filterData.conductor_materials}
-              selected={parseFilterValues('conductor_material')}
-              onChange={(values) => handleFilterChange('conductor_material', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Color */}
-        {filterData.colors?.length > 0 && (
-          <AccordionFilter title="Цвет">
-            <CheckboxGroup
-              options={filterData.colors}
-              selected={parseFilterValues('color')}
-              onChange={(values) => handleFilterChange('color', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Conductor Insulation Material */}
-        {filterData.conductor_insulation_materials?.length > 0 && (
-          <AccordionFilter title="Материал изоляции проводника">
-            <CheckboxGroup
-              options={filterData.conductor_insulation_materials}
-              selected={parseFilterValues('conductor_insulation_material')}
-              onChange={(values) => handleFilterChange('conductor_insulation_material', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Outer Insulation Material */}
-        {filterData.outer_insulation_materials?.length > 0 && (
-          <AccordionFilter title="Материал внешней изоляции">
-            <CheckboxGroup
-              options={filterData.outer_insulation_materials}
-              selected={parseFilterValues('outer_insulation_material')}
-              onChange={(values) => handleFilterChange('outer_insulation_material', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Outer Sheath Material */}
-        {filterData.outer_sheath_materials?.length > 0 && (
-          <AccordionFilter title="Материал внешней оболочки">
-            <CheckboxGroup
-              options={filterData.outer_sheath_materials}
-              selected={parseFilterValues('outer_sheath_material')}
-              onChange={(values) => handleFilterChange('outer_sheath_material', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* Model Version */}
-        {filterData.model_versions?.length > 0 && (
-          <AccordionFilter title="Модель/Исполнение">
-            <CheckboxGroup
-              options={filterData.model_versions}
-              selected={parseFilterValues('model_version')}
-              onChange={(values) => handleFilterChange('model_version', values)}
-            />
-          </AccordionFilter>
-        )}
-
-        {/* New Products Toggle */}
-        <AccordionFilter title="Новые товары">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filters.new || false}
-              onChange={(e) => handleToggleFilter('new', e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-[#C3974C] focus:ring-[#C3974C]"
-            />
-            <span className="text-sm text-gray-700">Показать только новые</span>
-          </label>
-        </AccordionFilter>
-
-        {/* Popular Products Toggle */}
-        <AccordionFilter title="Популярные">
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={filters.popular || false}
-              onChange={(e) => handleToggleFilter('popular', e.target.checked)}
-              className="w-4 h-4 rounded border-gray-300 text-[#C3974C] focus:ring-[#C3974C]"
-            />
-            <span className="text-sm text-gray-700">Показать популярные</span>
-          </label>
-        </AccordionFilter>
-      </div>
-
-      {/* Price Range Filter */}
-      {filterData.price_range && (
-        <div className="mt-[12px]">
-          <AccordionFilter title="Цена (₽)" defaultOpen={true}>
-            <PriceRangeFilter
-              min={Math.floor(filterData.price_range.min)}
-              max={Math.ceil(filterData.price_range.max)}
-              currentMin={filters.min_price || Math.floor(filterData.price_range.min)}
-              currentMax={filters.max_price || Math.ceil(filterData.price_range.max)}
-              onChange={handlePriceChange}
-            />
-          </AccordionFilter>
-        </div>
-      )}
-
-      {/* Register Banner */}
-      <div className="w-[317px] mt-[12px]">
-        <div className="bg-white p-[24px] rounded-2xl shadow">
-          <div className="relative">
-            <img
-              src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1468&q=80"
-              alt="Электрик провода режет"
-              className="w-[269px] h-[79px] object-cover rounded-2xl"
-            />
-          </div>
-          <div className="">
-            <h3 className="text-xl font-semibold text-[#272727] mb-2 mt-[16px]">
-              Про оформление заказа:
-            </h3>
-            <p className="font-normal text-sm leading-4 tracking-[-0.02em]">
-              Перед добавлением товара в корзину, вам нужно зарегистрироваться на нашем сайте, чтобы оформить заказ
-            </p>
-          </div>
-        </div>
-        <Button
-          className={'w-[317px] h-[50px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] mt-4'}
-          text={'Зарегистрироваться'}
-        />
-      </div>
+      </AnimatePresence>
     </div>
   );
 });

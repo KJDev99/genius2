@@ -166,9 +166,9 @@ export default function ProductBox() {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-4 md:py-0">
             {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+            <div className="flex items-center gap-2 text-sm text-gray-600 mb-6 overflow-hidden text-nowrap">
                 <Link href="/" className="hover:text-gray-900">Главная</Link>
                 <span>-</span>
                 <Link href="/catalog" className="hover:text-gray-900">Каталог</Link>
@@ -182,15 +182,15 @@ export default function ProductBox() {
                 <span>-</span>
                 <span className="text-gray-900">{product.name}</span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
+            <h1 className="text-2xl md:text-3xl  text-gray-900 mb-4">{product.name}</h1>
             {/* Product Details */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-16">
                 {/* Left - Images */}
                 <div>
-                    <div className="flex gap-4">
-                        {/* Thumbnail Images - Left side */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                        {/* Thumbnail Images - Below on mobile, left on desktop */}
                         {product.images?.length > 1 && (
-                            <div className="flex flex-col gap-2">
+                            <div className="flex md:flex-col gap-2 order-2 md:order-1">
                                 {product.images.map((img, index) => (
                                     <button
                                         key={img.id}
@@ -213,12 +213,12 @@ export default function ProductBox() {
                         )}
 
                         {/* Main Image Container */}
-                        <div className="flex-1">
+                        <div className="flex-1 order-1 md:order-2">
                             <div className="relative bg-gray-50 rounded-2xl p-8">
                                 {/* Favorite button */}
 
 
-                                <div className="relative h-[400px] flex items-center justify-center">
+                                <div className="relative h-[400px] flex items-center justify-center max-md:h-[260px]">
                                     {product.images?.length > 0 ? (
                                         <Image
                                             src={product.images[selectedImageIndex].image}
@@ -254,7 +254,7 @@ export default function ProductBox() {
                     {/* Price */}
                     <div className="mb-6">
                         <div className="flex items-baseline gap-2">
-                            <span className="text-4xl font-bold bg-gradient-to-r from-[#D8C19A] to-[#C3974C] bg-clip-text text-transparent">
+                            <span className="text-3xl md:text-4xl bg-gradient-to-r from-[#D8C19A] to-[#C3974C] bg-clip-text text-transparent">
                                 {parseFloat(product.price_per_meter).toLocaleString('ru-RU', {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
@@ -291,7 +291,7 @@ export default function ProductBox() {
 
                     {/* Quantity & Add to Cart */}
                     <div className="mb-8">
-                        <div className="flex gap-4 items-center">
+                        <div className="flex flex-row gap-4 items-center">
                             <div className="border-2 border-gray-300 rounded-lg flex items-center justify-between px-6 py-3 w-40">
                                 <button
                                     onClick={() => handleQuantityChange('decrement')}
@@ -308,7 +308,7 @@ export default function ProductBox() {
                                     <LuPlus />
                                 </button>
                             </div>
-                            <p className="text-2xl text-[#C3974C]">
+                            <p className="text-xl md:text-2xl text-[#C3974C]">
                                 {calculateTotal().toLocaleString('ru-RU', {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
@@ -316,7 +316,7 @@ export default function ProductBox() {
                             </p>
 
                         </div>
-                        <div className="w-[418px] h-[68px]">
+                        <div className="w-full md:w-[418px] h-[68px]">
                             <Button
                                 onClick={handleAddToCart}
                                 className="flex-1 h-auto py-3 bg-gradient-to-r from-[#D8C19A] to-[#C3974C] hover:opacity-90 transition w-full h-full mt-6"
@@ -367,18 +367,18 @@ export default function ProductBox() {
             </div>
 
             {/* Description Section */}
-            <div className="mb-16">
-                <h2 className="text-2xl font-bold mb-6">Описание</h2>
-                <div className="bg-gray-50 rounded-2xl p-8">
-                    <p className="text-gray-700 leading-relaxed">{product.description}</p>
+            <div className="mb-16 grid grid-cols-4 max-md:grid-cols-1">
+                <h2 className="text-2xl max-md:mb-4">Описание</h2>
+                <div className="col-span-3 max-md:col-span-1">
+                    <p className="text-[#272727] leading-relaxed max-md:leading-[130%] max-md:text-[#27272799]">{product.description}</p>
                 </div>
             </div>
 
             {/* Similar Products */}
             {similarProducts.length > 0 && (
                 <div>
-                    <h2 className="text-2xl font-bold mb-6">Похожие товары</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <h2 className="text-2xl  mb-6">Похожие товары</h2>
+                    <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 max-md:gap-4">
                         {similarProducts.slice(0, 4).map((product) => (
                             <div key={product.id}>
                                 <Product

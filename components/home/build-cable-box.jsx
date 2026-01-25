@@ -146,7 +146,7 @@ export default function BuildCableBox() {
               <div
                 key={category.id}
                 ref={el => cardRefs.current[index] = el}
-                className="max-md:snap-center max-md:shrink-0"
+                className="max-md:snap-center max-md:shrink-0 md:mx-0!"
               >
                 <BuildingCableCard
                   id={category.id}
