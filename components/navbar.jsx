@@ -6,21 +6,44 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { useApiStore } from "@/store/useApiStore";
 
 export default function Navbar() {
   const [search, setSearch] = useState("");
   const [catalogOpen, setCatalogOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
   const pathname = usePathname();
-
-  // Faqat bitta sahifa uchun - masalan, home page (asosiy sahifa)
-  const isSpecialPage = pathname === "/"; // "/" ni o'zingizning kerakli sahifa manziliga o'zgartiring
+  const { getData } = useApiStore();
 
   useEffect(() => {
     // LocalStorage'dan access_token'ni tekshirish
     const token = localStorage.getItem("access_token");
     setIsLoggedIn(!!token);
   }, []);
+
+  useEffect(() => {
+    // Kategoriyalarni yuklash
+    const fetchCategories = async () => {
+      try {
+        setLoading(true);
+        const result = await getData('products/main-categories/');
+
+        if (result?.success && result?.data) {
+          // Faqat birinchi 6 tasini olish
+          const firstSixCategories = result.data.slice(0, 6);
+          setCategories(firstSixCategories);
+        }
+      } catch (error) {
+        console.error("Kategoriyalarni yuklashda xatolik:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, [getData]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
@@ -32,7 +55,6 @@ export default function Navbar() {
     <div className="max-w-[1340px] mx-auto">
       <div className="mt-[43px] hidden lg:block">
         <div className="flex justify-between items-center h-16">
-
           <div className="flex-shrink-0">
             <Image src="/icon/logoblack.svg" width={83} height={59} alt="Genius Electro" />
           </div>
@@ -43,19 +65,19 @@ export default function Navbar() {
             <Link href="/about" className={`${pathname === "/about" ? "text-black font-medium" : "text-[#27272799]"}`}>
               О нас
             </Link>
+
+            {/* Katalog dropdown */}
             <div className="relative">
-              <Link href={'/catalog'}
-                className={`flex items-center gap-1 hover:text-black transition-colors duration-200 focus:outline-none ${pathname === "/catalog" ? "text-black font-medium" : "text-[#27272799]"}`}
+              <button
+                onClick={() => setCatalogOpen(!catalogOpen)}
+                className={`flex items-center gap-1 hover:text-black transition-colors duration-200 focus:outline-none ${pathname.startsWith("/catalog-details") ? "text-black font-medium" : "text-[#27272799]"
+                  }`}
               >
                 Каталог
-                {/* <ChevronDownIcon
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setCatalogOpen(!catalogOpen);
-                  }}
+                <ChevronDownIcon
                   className={`w-4 h-4 transition-transform duration-200 ${catalogOpen ? "rotate-180" : ""}`}
-                /> */}
-              </Link>
+                />
+              </button>
 
               <AnimatePresence>
                 {catalogOpen && (
@@ -65,21 +87,34 @@ export default function Navbar() {
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
                     className="absolute top-full left-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50"
+                    onMouseLeave={() => setCatalogOpen(false)}
                   >
-                    <div className="py-4 px-2">
-                      <Link
-                        onClick={() => setCatalogOpen(false)}
-                        href="/catalog-details"
-                        className="block py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-                      >
-                        Кабель и провод
-                      </Link>
-                      <Link
-                        href="/catalog-details2"
-                        className="block py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-                      >
-                        Другое
-                      </Link>
+                    <div className="py-4 px-2 max-h-80 overflow-y-auto">
+                      {loading ? (
+                        <div className="py-2 px-3 text-center text-gray-500">
+                          Загрузка...
+                        </div>
+                      ) : categories.length > 0 ? (
+                        categories.map((category) => (
+                          <Link
+                            key={category.id}
+                            href={`/catalog-details/${category.id}`}
+                            onClick={() => setCatalogOpen(false)}
+                            className="block py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors duration-200 mb-1"
+                          >
+                            <div className="font-medium text-gray-800">{category.name}</div>
+                            {category.description && (
+                              <div className="text-xs text-gray-500 truncate mt-1">
+                                {category.description}
+                              </div>
+                            )}
+                          </Link>
+                        ))
+                      ) : (
+                        <div className="py-2 px-3 text-center text-gray-500">
+                          Нет категорий
+                        </div>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -96,6 +131,8 @@ export default function Navbar() {
               Контакты
             </Link>
           </div>
+
+          {/* O'ng qism - search va buttonlar */}
           <div className="flex items-center gap-4">
             <div className="relative">
               <input
@@ -117,7 +154,7 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Favorites button - Conditional routing */}
+            {/* Favorites button */}
             {isLoggedIn ? (
               <Link href="/profile/favorites">
                 <div className="w-[47px] h-[47px] bg-gradient-to-br from-[#D8C19A] to-[#C3974C] rounded-[12px] flex items-center justify-center cursor-pointer">
@@ -132,7 +169,7 @@ export default function Navbar() {
               </Link>
             )}
 
-            {/* Cart button - Conditional routing */}
+            {/* Cart button */}
             {isLoggedIn ? (
               <Link href="/profile/shop">
                 <div className="w-[47px] h-[47px] bg-gradient-to-br from-[#D8C19A] to-[#C3974C] rounded-[12px] flex items-center justify-center cursor-pointer">
@@ -155,26 +192,6 @@ export default function Navbar() {
                   Профиль
                 </button>
               </Link>
-              // <div className="relative group">
-              //   <button className="w-[129px] text-[#272727] h-[47px] bg-gradient-to-br from-[#D8C19A] to-[#C3974C] rounded-[12px] font-normal text-[14px] hover:opacity-90 transition flex items-center justify-center gap-2">
-              //     <UserIcon className="w-5 h-5" />
-              //     Профиль
-              //   </button>
-              //   <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block z-50">
-              //     <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">
-              //       Мой профиль
-              //     </Link>
-              //     <Link href="/orders" className="block px-4 py-2 hover:bg-gray-100">
-              //       Мои заказы
-              //     </Link>
-              //     <button
-              //       onClick={handleLogout}
-              //       className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
-              //     >
-              //       Выйти
-              //     </button>
-              //   </div>
-              // </div>
             ) : (
               <Link href="/auth/login">
                 <button className="w-[129px] text-[#272727] h-[47px] bg-gradient-to-br from-[#D8C19A] to-[#C3974C] rounded-[12px] font-normal text-[14px] hover:opacity-90 transition">

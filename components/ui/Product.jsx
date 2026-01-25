@@ -77,7 +77,7 @@ export default function Product({
     return (
         <Link href={`/product/${id}`}>
             <div
-                className='p-4 relative rounded-[12px] h-[481px] transition-all duration-300 cursor-pointer w-[317px] max-md:p-2 max-md:rounded-[8px]'
+                className='p-4 relative rounded-[12px] h-[481px] transition-all duration-300 cursor-pointer w-[317px] max-md:p-2 max-md:rounded-[8px] max-md:h-max max-md:w-full'
                 style={{ boxShadow: "0px 0px 4px 0px #76767626" }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
@@ -106,14 +106,14 @@ export default function Product({
                     src={img || '/sec.png'}
                     width={230}
                     height={230}
-                    className='transition-transform duration-300 w-full h-[230px] object-contain'
+                    className='transition-transform duration-300 w-full h-[230px] object-contain max-md:h-[150px]'
                     alt={item || 'product'}
                 />
 
-                <h3 className='my-4 text-[14px] text-[#272727] max-md:mt-2 max-md:text-[10px]'>
+                <h3 className='my-4 text-[14px] text-[#272727] max-md:mt-2 max-md:text-[10px] max-md:mb-2'>
                     {title || 'LC1-C5E04-157'}
                 </h3>
-                <p className='text-[18px] leading-[24px] font-normal tracking-[-0.01em] line-clamp-2'>
+                <p className='text-[18px] leading-[24px] font-normal tracking-[-0.01em] line-clamp-2 max-md:text-[12px] text-[#27272799] max-md:leading-[14px]'>
                     {item || 'ITK Витая пара U/UTP 5E 4х2х0,52 нг(А)-FRLSоранж. (305м)'}
                 </p>
 

@@ -122,8 +122,6 @@ export default function LeftPanel({ setStep }) {  // step prop endi ishlatilmaya
           )}
         </AnimatePresence>
       </div>
-
-      {/* Logout modal */}
       {showLogoutModal && (
         <LogOut redirtUrl="/" setExitModalOpen={setShowLogoutModal} />
       )}

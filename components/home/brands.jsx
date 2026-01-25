@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import React, { useRef, useEffect, useState } from 'react';
 import { LiaArrowLeftSolid, LiaArrowRightSolid } from "react-icons/lia";
+import { MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useApiStore } from '@/store/useApiStore';
 
 export default function Brands() {
@@ -50,7 +51,7 @@ export default function Brands() {
   };
 
   return (
-    <div className="max-w-[1340px] mx-auto mt-16 px-4">
+    <div className="max-w-[1340px] mx-auto mt-16 px-4 max-md:mt-8">
       {loading && (
         <div className='text-center py-10'>
           <p className='text-gray-500'>Загрузка партнеров...</p>
@@ -114,17 +115,17 @@ export default function Brands() {
           <div className="flex justify-center gap-[16px] mt-4 md:hidden">
             <button
               onClick={scrollLeft}
-              className="h-12 w-12 flex justify-center items-center rounded-full bg-gray-400 hover:bg-gray-500 transition-colors"
+              className="h-12 w-12 flex justify-center items-center rounded-full bg-[#76767626] transition-colors cursor-pointer"
               aria-label="Oldingi brendlar"
             >
-              <LiaArrowLeftSolid size={28} className="text-white" />
+              <MdOutlineKeyboardArrowLeft size={28} className="text-[#27272799]" />
             </button>
             <button
               onClick={scrollRight}
-              className="h-12 w-12 flex justify-center items-center rounded-full bg-gradient-to-br from-[#D8C19A] to-[#C3974C] hover:opacity-90 transition-opacity"
+              className="h-12 w-12 flex justify-center items-center rounded-full bg-gradient-to-br from-[#D8C19A] to-[#C3974C] hover:opacity-90 transition-opacity cursor-pointer"
               aria-label="Keyingi brendlar"
             >
-              <LiaArrowRightSolid size={28} className="text-white" />
+              <MdOutlineKeyboardArrowRight size={28} className="text-[#272727]" />
             </button>
           </div>
         </>
