@@ -135,8 +135,8 @@ export default function KabenetBox() {
     }
 
     return (
-        <div className='w-[858px] mt-[80px]'>
-            <h2 className='font-normal text-[24px] leading-[120%] tracking-[-0.04em] mb-[24px]'>
+        <div className='w-[858px] mt-[80px] max-md:w-full max-md:mt-8'>
+            <h2 className='font-normal text-[24px] leading-[120%] tracking-[-0.04em] mb-[24px] max-md:text-lg max-md:mb-4'>
                 Личные данные
             </h2>
 
@@ -153,7 +153,7 @@ export default function KabenetBox() {
             )}
 
             <form onSubmit={handleSubmit}>
-                <div className='grid grid-cols-2 gap-[16px]'>
+                <div className='grid grid-cols-2 gap-[16px] max-md:grid-cols-1'>
                     <div>
                         <p className="text-[#27272799] text-[16px] leading-[18px] tracking-[-0.02em] font-normal mb-[12px]">
                             Имя
@@ -211,7 +211,7 @@ export default function KabenetBox() {
                     </div>
                 </div>
 
-                <h2 className='font-normal text-[24px] leading-[120%] tracking-[-0.04em] mb-[24px] mt-[32px]'>
+                <h2 className='font-normal text-[24px] leading-[120%] tracking-[-0.04em] mb-[24px] mt-[32px] max-md:text-lg max-md:mb-4 max-md:mt-8'>
                     Адрес
                 </h2>
 
@@ -229,7 +229,7 @@ export default function KabenetBox() {
                     />
                 </div>
 
-                <div className='grid grid-cols-2 gap-[16px]'>
+                <div className='grid grid-cols-2 gap-[16px] max-md:grid-cols-1'>
                     <div>
                         <p className="text-[#27272799] text-[16px] leading-[18px] tracking-[-0.02em] font-normal mb-[12px]">
                             Улица
@@ -294,7 +294,7 @@ export default function KabenetBox() {
                             type="button"
                             onClick={handleEditToggle}
                             disabled={loading}
-                            className="w-[200px] h-[67px] rounded-[10px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] text-white font-medium hover:opacity-90 transition-opacity"
+                            className="w-[200px] h-[67px] rounded-[10px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] text-[#272727] font-medium hover:opacity-90 transition-opacity max-md:w-full"
                         >
                             Редактировать
                         </button>
@@ -303,7 +303,7 @@ export default function KabenetBox() {
                             <Button
                                 type="submit"
                                 text={loading ? 'Сохранение...' : 'Сохранить изменения'}
-                                className="w-[250px] h-[67px] rounded-[10px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] text-white"
+                                className="w-[250px] h-[67px] rounded-[10px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] text-[#272727]"
                                 disabled={loading}
                             />
                             <button

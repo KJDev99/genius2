@@ -311,7 +311,7 @@ const LeftPanelContent = React.memo(() => {
   return (
     <div>
       {/* Header */}
-      <div className='items-center flex justify-between px-[18px] w-full max-md:w-full h-[56px] rounded-[10px] border border-[#27272733] max-md:w-full'>
+      <div className='items-center flex justify-between px-[18px] w-full max-md:w-full h-[56px] rounded-[10px] border border-[#27272733] max-md:w-full max-md:hidden'>
         <h2 className="font-inter text-[20px] font-normal leading-[20px] tracking-[-0.02em]">
           Фильтры
         </h2>
@@ -324,6 +324,25 @@ const LeftPanelContent = React.memo(() => {
           </button>
           <button
             onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+            className="md:hidden"
+          >
+            {isFiltersOpen ? <IoIosArrowUp size={20} /> : <IoIosArrowDown size={20} />}
+          </button>
+        </div>
+      </div>
+      <div onClick={() => setIsFiltersOpen(!isFiltersOpen)} className='items-center flex justify-between px-[18px] w-full max-md:w-full h-[56px] rounded-[10px] border border-[#27272733] max-md:w-full md:hidden'>
+        <h2 className="font-inter text-[20px] font-normal leading-[20px] tracking-[-0.02em]">
+          Фильтры
+        </h2>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleReset}
+            className="hidden md:block font-inter text-[16px] font-normal leading-[18px] tracking-[0em] text-[#27272799] hover:text-gray-900 transition-colors"
+          >
+            Сбросить
+          </button>
+          <button
+
             className="md:hidden"
           >
             {isFiltersOpen ? <IoIosArrowUp size={20} /> : <IoIosArrowDown size={20} />}

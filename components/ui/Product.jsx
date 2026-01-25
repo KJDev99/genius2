@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { IoHeartOutline, IoHeart } from 'react-icons/io5'
 import { LuMinus, LuPlus } from "react-icons/lu";
@@ -25,11 +25,17 @@ export default function Product({
     onClick
 }) {
     const [quantity, setQuantity] = useState(initialQuantity)
-    const [isLiked, setIsLiked] = useState(isLike || false)
+    const [isLiked, setIsLiked] = useState(false)
     const [isHovered, setIsHovered] = useState(false)
+    const [loading, setLoading] = useState(false)
     const { addToCart } = useCartStore()
-    const { toggleFavorite, isFavorite } = useFavoritesStore()
+    const { toggleFavorite, isFavorite, addLocalFavorite, removeLocalFavorite } = useFavoritesStore()
     const router = useRouter()
+
+    // Komponent mount bo'lganda like holatini tekshirish
+    useEffect(() => {
+        setIsLiked(isFavorite(id));
+    }, [id, isFavorite]);
 
     const handleDecrement = () => {
         if (quantity > 1) {
@@ -41,9 +47,36 @@ export default function Product({
         setQuantity(quantity + 1)
     }
 
-    const toggleLike = () => {
-        setIsLiked(!isLiked)
-        toggleFavorite(id)
+    const toggleLike = async () => {
+        setLoading(true);
+        try {
+            const result = await toggleFavorite(id);
+
+            if (result?.success) {
+                // Muvaffaqiyatli bo'lsa, local state yangilash
+                setIsLiked(!isLiked);
+
+                // Agar API muvaffaqiyatsiz bo'lsa, local storage'ni yangilash
+                if (!result.success) {
+                    if (isLiked) {
+                        removeLocalFavorite(id);
+                    } else {
+                        addLocalFavorite(id);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+            // Xato bo'lsa ham UI yangilash
+            setIsLiked(!isLiked);
+            if (isLiked) {
+                removeLocalFavorite(id);
+            } else {
+                addLocalFavorite(id);
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleAddToCart = () => {
@@ -62,7 +95,6 @@ export default function Product({
         if (onClick) {
             onClick({ id, title, item, quantity, price })
         } else {
-            console.log('Product added to cart:', { id, title, item, quantity, price })
             router.push('/cart')
         }
     }
@@ -83,7 +115,7 @@ export default function Product({
                 onMouseLeave={() => setIsHovered(false)}
             >
                 {isNew && (
-                    <div className="absolute text-[#C9A76B] py-2 px-4.5 max-md:py-1 max-md:px-4 border border-[#C9A76B99] rounded-[6px] max-md:rounded-[4px] bg-[#F4EDE1]  text-sm z-10 max-md:text-[10px]">
+                    <div className="absolute text-[#C9A76B] py-2 px-4.5 max-md:py-1 max-md:px-4 border border-[#C9A76B99] rounded-[6px] max-md:rounded-[4px] bg-[#F4EDE1] text-sm z-10 max-md:text-[10px]">
                         Новинка
                     </div>
                 )}
@@ -92,14 +124,21 @@ export default function Product({
                     className={`absolute right-4 max-md:right-2 border rounded-[6px] max-md:rounded-[4px] max-md:w-5.5 max-md:h-5.5 w-8 h-8 flex items-center justify-center cursor-pointer transition-all duration-300 z-10 ${isLiked
                         ? 'text-[#C9A76B] border-[#C9A76B99] bg-[#F4EDE1]'
                         : 'text-[#C9A76B] border-[#C9A76B99] hover:bg-[#F4EDE1] bg-white'
-                        }`}
+                        } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        toggleLike();
+                        if (!loading) toggleLike();
                     }}
+                    title={isLiked ? 'Удалить из избранного' : 'Добавить в избранное'}
                 >
-                    {isLiked ? <IoHeart className='max-md:text-sm' /> : <IoHeartOutline className='max-md:text-sm' />}
+                    {loading ? (
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#C9A76B]"></div>
+                    ) : isLiked ? (
+                        <IoHeart className='max-md:text-sm' />
+                    ) : (
+                        <IoHeartOutline className='max-md:text-sm' />
+                    )}
                 </div>
 
                 <Image
@@ -117,13 +156,13 @@ export default function Product({
                     {item || 'ITK Витая пара U/UTP 5E 4х2х0,52 нг(А)-FRLSоранж. (305м)'}
                 </p>
 
-
                 <div className="mt-4 mb-4 text-lg flex max-md:mt-4 max-md:mb-3 max-md:text-sm">
                     <div className="flex items-center">
                         <p className="
                         bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)]
                         bg-clip-text
                         text-transparent
+                        font-medium
                     ">
                             {formatPrice(price || 0)} ₽
                         </p>
