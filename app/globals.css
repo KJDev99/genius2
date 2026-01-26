@@ -17,6 +17,7 @@ body {
 
 .AboutHeader {
   background: linear-gradient(360deg, #272727 0%, rgba(39, 39, 39, 0) 100%), url('/abouthero.png') center/cover no-repeat;
+  /* background: linear-gradient(360deg, #272727 0%, rgba(39, 39, 39, 0) 100%), url('/bg1.png') top center/cover no-repeat; */
 }
 
 .Catalohhero {

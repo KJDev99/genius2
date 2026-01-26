@@ -2,7 +2,7 @@
 
 export default function PaymentDeliveryReturnPage() {
   return (
-<div className="max-w-[1340px] m-auto mt-[100px] px-4 sm:px-8 lg:px-16">
+    <div className="max-w-[1340px] m-auto mt-[100px] px-4 sm:px-8 lg:px-16">
       <div className='grid grid-cols-1 sm:grid-cols-3'>
         <h2 className='  font-normal text-[24px] leading-[100%] tracking-[-0.04em] sm:text-[32px]'>Способы оплаты</h2>
         <div className='col-span-2'>
@@ -69,7 +69,7 @@ export default function PaymentDeliveryReturnPage() {
             <h2 className='font-normal text-[24px] mt-[32px] mb-[24px] leading-[120%] tracking-[-0.02em]'>Контакты для связи</h2>
             <p className='font-normal text-[18px] leading-[120%] tracking-[-0.02em] mb-[24px]'>Если у вас возникли вопросы по возврату товара, вы всегда можете обратиться в нашу службу поддержки:</p>
             <div className='grid grid-cols-2 sm:grid-cols-3'>
-50    sm:mt-[64px]       <div>
+              <div>
                 <h2 className='font-normal text-[14px] leading-[120%] tracking-[-0.01em] text-[#272727] mb-[12px]'>Телефон:</h2>
                 <p className='font-normal text-[18px] leading-[120%] tracking-[-0.02em]'>+7 (921) 111-89-23</p>
               </div>

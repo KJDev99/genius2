@@ -4,8 +4,13 @@ import React from 'react'
 export default function CantactHero() {
   return (
     <div
-      className='bg-cover bg-center bg-no-repeat h-[293px] md:mt-[44px] max-md:h-[212px] max-md:px-4'
-      style={{ background: 'linear-gradient(360deg, #272727 0%, rgba(39, 39, 39, 0) 100%), url(/kantacthero.png)' }}
+      className='h-[293px] md:mt-[44px] max-md:h-[212px] max-md:px-4'
+      style={{
+        backgroundImage: 'linear-gradient(360deg, #272727 0%, rgba(39, 39, 39, 0) 100%), url(/kantacthero.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
     >
       <div className='pt-[128px] max-w-[1340px] m-auto max-md:pt-20'>
 
