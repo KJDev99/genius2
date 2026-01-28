@@ -12,9 +12,13 @@ export default function Registration() {
   const router = useRouter()
   const { postData, loading } = useApiStore()
 
+  // Foydalanuvchi turi: 'buyer' (Xaridor) yoki 'partner' (Hamkor)
+  const [userType, setUserType] = useState('buyer')
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
   const [formData, setFormData] = useState({
+    name_company: '', // Hamkor uchun yangi maydon
     first_name: '',
     last_name: '',
     phone: '',
@@ -33,6 +37,12 @@ export default function Registration() {
   }
 
   const validateForm = () => {
+    // Hamkor bo'lsa kompaniya nomini tekshirish
+    if (userType === 'partner' && !formData.name_company.trim()) {
+      toast.error('Введите название компании')
+      return false
+    }
+
     if (!formData.first_name.trim()) {
       toast.error('Введите имя')
       return false
@@ -53,7 +63,6 @@ export default function Registration() {
       return false
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(formData.email)) {
       toast.error('Неверный формат email')
@@ -90,17 +99,25 @@ export default function Registration() {
       return
     }
 
-    // Prepare data for API (without terms_accepted)
     const { terms_accepted, ...apiData } = formData
 
-    // Submit
-    const result = await postData('/accounts/register/', apiData)
+    // Agar xaridor bo'lsa, name_company ni yubormaslik kerak
+    if (userType === 'buyer') {
+      delete apiData.name_company
+    }
+
+    // URL foydalanuvchi turiga qarab o'zgaradi
+    const endpoint = userType === 'buyer'
+      ? '/accounts/register/'
+      : '/accounts/register-supplier/'
+
+    const result = await postData(endpoint, apiData)
 
     if (result && !result.error) {
       toast.success('Регистрация успешна! Проверьте email для подтверждения.')
 
-      // Reset form
       setFormData({
+        name_company: '',
         first_name: '',
         last_name: '',
         phone: '',
@@ -110,12 +127,10 @@ export default function Registration() {
         terms_accepted: false
       })
 
-      // Redirect to login or email verification page
       setTimeout(() => {
         router.push('/auth/login')
       }, 2000)
     } else {
-      // Handle specific errors
       if (result?.email) {
         toast.error(result.email[0] || 'Email уже используется')
       } else if (result?.phone) {
@@ -130,11 +145,47 @@ export default function Registration() {
 
   return (
     <div className='max-w-[581px] mx-auto px-4'>
-      <h2 className='mb-[32px] md:mb-[48px] mt-[50px] md:mt-[79px] font-semibold text-[28px] md:text-[32px] leading-[1.5] tracking-[-0.04em]'>
-        Регистрация
-      </h2>
+      <div className="flex justify-between items-center mb-[32px] mt-[50px] md:mt-[79px] max-md:flex-col gap-y-4">
+        <h2 className='font-semibold text-[28px] md:text-[32px] leading-[1.5] tracking-[-0.04em]'>
+          Регистрация
+        </h2>
+
+        {/* Foydalanuvchi turini tanlash (Tablar) */}
+        <div className="flex gap-x-6">
+          <button
+            type="button"
+            onClick={() => setUserType('buyer')}
+            className={`transition-all duration-300 ${userType === 'buyer' ? 'text-[#272727] font-medium border-b-2 border-[#C9A76B]' : 'text-[#27272799]'}`}
+          >
+            Покупатель
+          </button>
+          <button
+            type="button"
+            onClick={() => setUserType('partner')}
+            className={`transition-all duration-300 ${userType === 'partner' ? 'text-[#272727] font-medium border-b-2 border-[#C9A76B]' : 'text-[#27272799]'}`}
+          >
+            Партнер (Юр.лицо)
+          </button>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-[16px]">
+
+        {/* Agar Partner bo'lsa kompaniya nomi chiqadi */}
+        {userType === 'partner' && (
+          <div className="animate-in fade-in duration-500">
+            <input
+              type="text"
+              name="name_company"
+              value={formData.name_company}
+              onChange={handleInputChange}
+              placeholder="Название компании"
+              className="w-full px-6 h-[66px] text-base text-gray-900 placeholder-gray-500 bg-white border border-gray-700 rounded-xl outline-none focus:border-[#C9A76B] transition-colors"
+              required
+            />
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
           <div>
             <input
@@ -233,7 +284,7 @@ export default function Registration() {
             name="terms_accepted"
             checked={formData.terms_accepted}
             onChange={handleInputChange}
-            className='w-[30px] h-[30px] accent-[#C9A76B] flex-shrink-0 mt-1'
+            className='w-[30px] h-[30px] accent-[#C9A76B] flex-shrink-0 mt-1 cursor-pointer'
             required
           />
           <p className='font-normal text-[12px] leading-[140%]'>
