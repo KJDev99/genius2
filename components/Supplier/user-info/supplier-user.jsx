@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApiStore } from '@/store/useApiStore';
 import toast from 'react-hot-toast';
-import { LuUpload, LuSave, LuChevronDown } from 'react-icons/lu';
+import { LuUpload, LuSave, LuChevronDown, LuFile } from 'react-icons/lu';
 
 export default function SupplierUser() {
     const { getDataToken, putDataToken, postFormDataToken, putFormDataToken, loading } = useApiStore();
@@ -51,12 +51,21 @@ export default function SupplierUser() {
         acts_on_basis: ''
     });
 
-    const [docs, setDocs] = useState({
+    const [existingDocs, setExistingDocs] = useState({
         tin_certificate: null,
         ogrn_certificate: null,
         charter: null,
         director_appointment: null
     });
+
+    const [newDocs, setNewDocs] = useState({
+        tin_certificate: null,
+        ogrn_certificate: null,
+        charter: null,
+        director_appointment: null
+    });
+
+    const [hasExistingDocs, setHasExistingDocs] = useState(false);
 
     useEffect(() => {
         fetchCompanyData();
@@ -66,12 +75,30 @@ export default function SupplierUser() {
         const res = await getDataToken('/accounts/company/');
         if (res) {
             setCompanyId(res.id);
+
+            // Asosiy form ma'lumotlarini to'ldirish
             const updatedForm = {};
             Object.keys(formData).forEach(key => {
                 updatedForm[key] = res[key] || '';
             });
             updatedForm.matches_legal_address = res.matches_legal_address || false;
             setFormData(updatedForm);
+
+            // Documentlarni to'ldirish
+            if (res.documents && res.documents.length > 0) {
+                const companyDocs = res.documents[0]; // Birinchi document objectini olish
+                const docsState = {
+                    tin_certificate: companyDocs.tin_certificate || null,
+                    ogrn_certificate: companyDocs.ogrn_certificate || null,
+                    charter: companyDocs.charter || null,
+                    director_appointment: companyDocs.director_appointment || null
+                };
+                setExistingDocs(docsState);
+
+                // Documentlar mavjudligini tekshirish
+                const hasDocs = Object.values(docsState).some(val => val !== null);
+                setHasExistingDocs(hasDocs);
+            }
         }
     };
 
@@ -99,35 +126,80 @@ export default function SupplierUser() {
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
-        setDocs(prev => ({ ...prev, [name]: files[0] }));
+        setNewDocs(prev => ({ ...prev, [name]: files[0] }));
     };
 
     const handleSave = async (e) => {
         e.preventDefault();
         if (!companyId) return;
 
-        // const companyRes = await putDataToken(`/accounts/companies/${companyId}/documents/`, formData);
+        try {
+            // 1. Asosiy ma'lumotlarni saqlash (PUT)
+            const companyData = { ...formData };
 
-        const hasFiles = Object.values(docs).some(val => val !== null);
-        if (hasFiles) {
-            const docData = new FormData();
-            Object.keys(docs).forEach(key => {
-                if (docs[key]) docData.append(key, docs[key]);
-            });
-            await postFormDataToken(`/accounts/companies/${companyId}/documents/`, docData);
+            // Faqat mavjud fieldlarni yuborish
+            const cleanData = Object.keys(companyData).reduce((acc, key) => {
+                if (companyData[key] !== null && companyData[key] !== undefined) {
+                    acc[key] = companyData[key];
+                }
+                return acc;
+            }, {});
+
+            const companyRes = await putFormDataToken(`/accounts/companies/${companyId}/update/`, cleanData);
+
+            // 2. Documentlarni saqlash
+            const hasNewFiles = Object.values(newDocs).some(val => val !== null);
+            if (hasNewFiles) {
+                const docData = new FormData();
+                Object.keys(newDocs).forEach(key => {
+                    if (newDocs[key]) docData.append(key, newDocs[key]);
+                });
+
+                if (hasExistingDocs) {
+                    // Documentlar mavjud bo'lsa PUT qilish
+                    await putFormDataToken(`/accounts/companies/${companyId}/documents/`, docData);
+                } else {
+                    // Documentlar mavjud bo'lmasa POST qilish
+                    await postFormDataToken(`/accounts/companies/${companyId}/documents/`, docData);
+                }
+            }
+
+            if (companyRes && !companyRes.error) {
+                toast.success('Данные успешно сохранены');
+                // Yangi ma'lumotlarni olish
+                fetchCompanyData();
+                // NewDocs ni tozalash
+                setNewDocs({
+                    tin_certificate: null,
+                    ogrn_certificate: null,
+                    charter: null,
+                    director_appointment: null
+                });
+            } else {
+                toast.error('Ошибка при сохранении данных компании');
+            }
+        } catch (error) {
+            toast.error('Произошла ошибка при сохранении');
+            console.error('Save error:', error);
         }
+    };
 
-        // if (companyRes && !companyRes.error) {
-        //     toast.success('Данные успешно сохранены');
-        //     fetchCompanyData();
-        // } else {
-        //     toast.error('Ошибка при сохранении');
-        // }
+    // Document nomini olish (URL dan fayl nomini ajratish)
+    const getFileNameFromUrl = (url) => {
+        if (!url) return null;
+        return url.split('/').pop();
+    };
+
+    // Documentni ochish
+    const openDocument = (url) => {
+        if (url) {
+            window.open(url, '_blank');
+        }
     };
 
     return (
-        <div className=" mt-20 max-md:pt-4">
-            <form onSubmit={handleSave} className="max-w-[1000px] mx-auto space-y-10 ">
+        <div className="mt-20 max-md:pt-4">
+            <form onSubmit={handleSave} className="max-w-[1000px] mx-auto space-y-10">
 
                 {/* 1. Основная информация */}
                 <section className="space-y-6">
@@ -251,10 +323,38 @@ export default function SupplierUser() {
                 <section className="space-y-6 pt-4 border-t border-gray-100">
                     <h2 className="text-[20px] text-[#272727]">Загрузка документов</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                        <FileSelect label="Свидетельство ИНН" name="tin_certificate" onChange={handleFileChange} fileName={docs.tin_certificate?.name} />
-                        <FileSelect label="Свидетельство ОГРН/ОГРНИП" name="ogrn_certificate" onChange={handleFileChange} fileName={docs.ogrn_certificate?.name} />
-                        <FileSelect label="Устав (для юр. лиц)" name="charter" onChange={handleFileChange} fileName={docs.charter?.name} />
-                        <FileSelect label="Документ о назначении руководителя" name="director_appointment" onChange={handleFileChange} fileName={docs.director_appointment?.name} />
+                        <FileSelect
+                            label="Свидетельство ИНН"
+                            name="tin_certificate"
+                            onChange={handleFileChange}
+                            existingFile={existingDocs.tin_certificate}
+                            newFile={newDocs.tin_certificate}
+                            onOpenExisting={() => openDocument(existingDocs.tin_certificate)}
+                        />
+                        <FileSelect
+                            label="Свидетельство ОГРН/ОГРНИП"
+                            name="ogrn_certificate"
+                            onChange={handleFileChange}
+                            existingFile={existingDocs.ogrn_certificate}
+                            newFile={newDocs.ogrn_certificate}
+                            onOpenExisting={() => openDocument(existingDocs.ogrn_certificate)}
+                        />
+                        <FileSelect
+                            label="Устав (для юр. лиц)"
+                            name="charter"
+                            onChange={handleFileChange}
+                            existingFile={existingDocs.charter}
+                            newFile={newDocs.charter}
+                            onOpenExisting={() => openDocument(existingDocs.charter)}
+                        />
+                        <FileSelect
+                            label="Документ о назначении руководителя"
+                            name="director_appointment"
+                            onChange={handleFileChange}
+                            existingFile={existingDocs.director_appointment}
+                            newFile={newDocs.director_appointment}
+                            onOpenExisting={() => openDocument(existingDocs.director_appointment)}
+                        />
                     </div>
                 </section>
 
@@ -262,9 +362,14 @@ export default function SupplierUser() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full md:w-[280px] h-[58px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] text-white rounded-xl text-[16px] shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                        className="w-full md:w-[280px] h-[58px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] text-white rounded-xl text-[16px] shadow-lg hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {loading ? 'Сохранение...' : 'Сохранить изменения'}
+                        {loading ? 'Сохранение...' : (
+                            <>
+                                <LuSave className="text-xl" />
+                                Сохранить изменения
+                            </>
+                        )}
                     </button>
                 </div>
             </form>
@@ -290,19 +395,54 @@ function Input({ label, name, value, onChange, type = "text", placeholder = "" }
 }
 
 // Reusable File Component
-function FileSelect({ label, name, onChange, fileName }) {
+function FileSelect({ label, name, onChange, existingFile, newFile, onOpenExisting }) {
+    const hasExistingFile = existingFile && existingFile !== "string" && existingFile !== null;
+    const hasNewFile = newFile !== null;
+
     return (
         <div className="flex flex-col gap-1 text-start">
-            <label className="text-[13px] text-gray-400">{label}</label>
+            <label className="text-[13px] text-gray-400 flex justify-between">
+                {label}
+                {hasExistingFile && !hasNewFile && (
+                    <button
+                        type="button"
+                        onClick={onOpenExisting}
+                        className="text-[#C9A76B] hover:text-[#b39140] text-sm font-medium flex items-center gap-x-2"
+                    >
+                        <LuFile className="text-gray-400" />
+                        Скачать
+                    </button>
+                )}
+            </label>
+
+            {/* Mavjud fayl qismi */}
+
+
+            {/* Yangi fayl tanlangan bo'lsa */}
+
+
+            {/* Fayl tanlash maydoni */}
             <label className="flex items-center justify-between px-5 h-[54px] border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-all">
                 <span className="text-sm text-gray-400 truncate max-w-[180px]">
-                    {fileName || "Файл не выбран"}
+                    {hasNewFile ? "Изменить файл" : (hasExistingFile ? "Заменить файл" : "Выберите файл")}
                 </span>
-                <span className="bg-[#EFEFEF] text-[#272727] text-[12px] px-4 py-2 rounded-lg font-medium">
-                    Выберите файл
+                <span className="flex items-center gap-2 bg-[#EFEFEF] text-[#272727] text-[12px] px-4 py-2 rounded-lg font-medium">
+                    <LuUpload className="text-sm" />
+                    {hasNewFile ? "Изменить" : (hasExistingFile ? "Заменить" : "Выбрать")}
                 </span>
-                <input type="file" name={name} onChange={onChange} className="hidden" />
+                <input
+                    type="file"
+                    name={name}
+                    onChange={onChange}
+                    className="hidden"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                />
             </label>
         </div>
     );
+}
+// Helper function for FileSelect
+function getFileNameFromUrl(url) {
+    if (!url) return null;
+    return url.split('/').pop();
 }

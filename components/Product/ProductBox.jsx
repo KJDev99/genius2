@@ -14,9 +14,12 @@ import { useFavoritesStore } from '@/store/useFavoritesStore';
 const API_BASE_URL = 'https://api.electro.motorsdream.ru/api/v1';
 
 export default function ProductBox() {
-    const params = useParams();
     const router = useRouter();
-    const productId = 8;
+    const params = useParams();
+    const productId = params.productId;
+
+    console.log(params);
+
 
     const [product, setProduct] = useState(null);
     const [similarProducts, setSimilarProducts] = useState([]);
