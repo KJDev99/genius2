@@ -106,7 +106,7 @@ export default function SupplierUser() {
         e.preventDefault();
         if (!companyId) return;
 
-        const companyRes = await putDataToken(`/accounts/companies/${companyId}/documents/`, formData);
+        // const companyRes = await putDataToken(`/accounts/companies/${companyId}/documents/`, formData);
 
         const hasFiles = Object.values(docs).some(val => val !== null);
         if (hasFiles) {
@@ -114,15 +114,15 @@ export default function SupplierUser() {
             Object.keys(docs).forEach(key => {
                 if (docs[key]) docData.append(key, docs[key]);
             });
-            await putFormDataToken(`/accounts/companies/${companyId}/documents/`, docData);
+            await postFormDataToken(`/accounts/companies/${companyId}/documents/`, docData);
         }
 
-        if (companyRes && !companyRes.error) {
-            toast.success('Данные успешно сохранены');
-            fetchCompanyData();
-        } else {
-            toast.error('Ошибка при сохранении');
-        }
+        // if (companyRes && !companyRes.error) {
+        //     toast.success('Данные успешно сохранены');
+        //     fetchCompanyData();
+        // } else {
+        //     toast.error('Ошибка при сохранении');
+        // }
     };
 
     return (

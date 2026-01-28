@@ -103,7 +103,11 @@ export default function SupplierProduct() {
 
         Object.keys(formData).forEach(key => {
             if (key === 'images') {
-                formData.images.forEach(file => data.append('images', file));
+                // Rasmlarni bitta massiv ko'rinishida emas, 
+                // balki har bir faylni alohida 'images' keyi bilan append qilamiz
+                formData.images.forEach(file => {
+                    data.append('images', file);
+                });
             } else if (formData[key] !== '' && formData[key] !== null) {
                 data.append(key, formData[key]);
             }
