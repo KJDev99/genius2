@@ -85,7 +85,7 @@ export default function ProductBox() {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
-            router.push('/login');
+            router.push('/auth/login');
             return;
         }
 
@@ -113,7 +113,7 @@ export default function ProductBox() {
         const accessToken = localStorage.getItem('access_token');
 
         if (!accessToken) {
-            router.push('/login');
+            router.push('/auth/login');
             return;
         }
 

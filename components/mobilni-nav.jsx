@@ -63,7 +63,9 @@ export default function MobileNavbar() {
     <>
       <div className="lg:hidden">
         <div className="flex justify-between items-center py-[24px] px-[14px] max-md:px-6 max-md:py-4">
-          <Image src="/icon/logoblack.svg" width={70} height={50} alt="Genius Electro" />
+          <Link href="/">
+            <Image src="/icon/logoblack.svg" width={70} height={50} alt="Genius Electro" />
+          </Link>
           <button onClick={() => setIsOpen(!isOpen)} className="text-[#C3974C]">
             {isOpen ? <XMarkIcon className="w-8 h-8" /> : <Bars3Icon className="w-8 h-8" />}
           </button>

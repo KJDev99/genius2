@@ -70,7 +70,9 @@ export default function Navbar() {
       <div className="mt-[43px] hidden lg:block">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <Image src="/icon/logoblack.svg" width={83} height={59} alt="Genius Electro" />
+            <Link href="/">
+              <Image src="/icon/logoblack.svg" width={83} height={59} alt="Genius Electro" />
+            </Link>
           </div>
           <div className="flex items-center gap-[24px]">
             <Link href="/" className={`font-medium ${pathname === "/" ? "text-black" : "text-[#27272799]"}`}>

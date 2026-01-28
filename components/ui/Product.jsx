@@ -165,7 +165,7 @@ export default function Product({
                 <h3 className='my-4 text-[14px] text-[#272727] max-md:mt-2 max-md:text-[10px] max-md:mb-2'>
                     {title || 'LC1-C5E04-157'}
                 </h3>
-                <p className='text-[18px] leading-[24px] font-normal tracking-[-0.01em] line-clamp-2 max-md:text-[12px] text-[#27272799] max-md:leading-[14px]'>
+                <p className='text-[18px] leading-[24px] font-normal tracking-[-0.01em] h-12 line-clamp-2 max-md:text-[12px] text-[#27272799] max-md:leading-[14px]'>
                     {item || 'ITK Витая пара U/UTP 5E 4х2х0,52 нг(А)-FRLSоранж. (305м)'}
                 </p>
 
