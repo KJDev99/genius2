@@ -80,11 +80,18 @@ const CheckboxGroup = React.memo(({ options, selected = [], onChange }) => {
 
 CheckboxGroup.displayName = 'CheckboxGroup';
 
-// Price Range Filter Component - MEMOIZED (Bitta range bilan)
+// Price Range Filter Component - MISHKA BILAN ISHLASH UCHUN YANGILANGAN
 const PriceRangeFilter = React.memo(({ min, max, currentMin, currentMax, onChange }) => {
   const rangeMin = useRef(min);
   const rangeMax = useRef(max);
   const timeoutRef = useRef(null);
+  const MIN_GAP = 100;
+
+  const minThumbRef = useRef(null);
+  const maxThumbRef = useRef(null);
+  const trackRef = useRef(null);
+  const isDraggingMin = useRef(false);
+  const isDraggingMax = useRef(false);
 
   // Range track style
   const getTrackStyle = () => {
@@ -111,27 +118,75 @@ const PriceRangeFilter = React.memo(({ min, max, currentMin, currentMax, onChang
     }
 
     if (isMinThumb) {
-      // Minimum thumb harakati
-      const newMin = Math.min(value, currentMax - 10);
+      const newMin = Math.min(value, currentMax - MIN_GAP);
       onChange({ min: newMin, max: currentMax });
     } else {
-      // Maximum thumb harakati
-      const newMax = Math.max(value, currentMin + 10);
+      const newMax = Math.max(value, currentMin + MIN_GAP);
       onChange({ min: currentMin, max: newMax });
     }
 
-    // Debounce
     timeoutRef.current = setTimeout(() => { }, 500);
   }, [currentMin, currentMax, onChange]);
+
+  // Mishka bilan drag qilish uchun funksiyalar
+  const handleMouseDown = useCallback((type) => (e) => {
+    e.preventDefault();
+    if (type === 'min') {
+      isDraggingMin.current = true;
+    } else {
+      isDraggingMax.current = true;
+    }
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
+    if (!isDraggingMin.current && !isDraggingMax.current) return;
+    if (!trackRef.current) return;
+
+    const rect = trackRef.current.getBoundingClientRect();
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const value = Math.round(rangeMin.current + percent * (rangeMax.current - rangeMin.current));
+
+    if (isDraggingMin.current) {
+      const newMin = Math.min(value, currentMax - MIN_GAP);
+      const clampedMin = Math.max(rangeMin.current, newMin);
+      onChange({ min: clampedMin, max: currentMax });
+    } else if (isDraggingMax.current) {
+      const newMax = Math.max(value, currentMin + MIN_GAP);
+      const clampedMax = Math.min(rangeMax.current, newMax);
+      onChange({ min: currentMin, max: clampedMax });
+    }
+  }, [currentMin, currentMax, onChange]);
+
+  const handleMouseUp = useCallback(() => {
+    isDraggingMin.current = false;
+    isDraggingMax.current = false;
+  }, []);
+
+  // Event listeners qo'shish
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseMove, handleMouseUp]);
 
   const handleInputChange = useCallback((type, value) => {
     const numValue = parseInt(value) || 0;
 
     if (type === 'min') {
-      const newMin = Math.min(Math.max(numValue, rangeMin.current), currentMax - 10);
+      const newMin = Math.min(
+        Math.max(numValue, rangeMin.current),
+        currentMax - MIN_GAP
+      );
       onChange({ min: newMin, max: currentMax });
     } else {
-      const newMax = Math.max(Math.min(numValue, rangeMax.current), currentMin + 10);
+      const newMax = Math.max(
+        Math.min(numValue, rangeMax.current),
+        currentMin + MIN_GAP
+      );
       onChange({ min: currentMin, max: newMax });
     }
   }, [currentMin, currentMax, onChange]);
@@ -150,16 +205,32 @@ const PriceRangeFilter = React.memo(({ min, max, currentMin, currentMax, onChang
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-2">
       {/* Range Track Container */}
-      <div className="relative h-2">
+      <div className="relative h-2 mt-6" ref={trackRef}>
         {/* Track background */}
         <div
-          className="absolute top-0 left-0 right-0 h-2 rounded-full"
+          className="absolute top-0 left-0 right-0 h-2 rounded-full cursor-pointer"
           style={getTrackStyle()}
         />
 
-        {/* Minimum thumb */}
+        {/* Minimum thumb - mishka bilan */}
+        <div
+          ref={minThumbRef}
+          onMouseDown={handleMouseDown('min')}
+          className="absolute top-1/2 h-6 w-6 bg-[#C3974C] rounded-full border-4 border-white shadow-lg transform -translate-y-1/2 -translate-x-1/2 z-30 cursor-pointer hover:scale-110 transition-transform active:scale-95"
+          style={{ left: `${((currentMin - rangeMin.current) / (rangeMax.current - rangeMin.current)) * 100}%` }}
+        />
+
+        {/* Maximum thumb - mishka bilan */}
+        <div
+          ref={maxThumbRef}
+          onMouseDown={handleMouseDown('max')}
+          className="absolute top-1/2 h-6 w-6 bg-[#C3974C] rounded-full border-4 border-white shadow-lg transform -translate-y-1/2 -translate-x-1/2 z-30 cursor-pointer hover:scale-110 transition-transform active:scale-95"
+          style={{ left: `${((currentMax - rangeMin.current) / (rangeMax.current - rangeMin.current)) * 100}%` }}
+        />
+
+        {/* Hidden range inputs - zapasda */}
         <input
           type="range"
           data-type="min"
@@ -167,10 +238,9 @@ const PriceRangeFilter = React.memo(({ min, max, currentMin, currentMax, onChang
           max={rangeMax.current}
           value={currentMin}
           onChange={handleRangeChange}
-          className="absolute top-0 left-0 w-full h-2 opacity-0 cursor-pointer z-20"
+          className="absolute top-0 left-0 w-full h-2 opacity-0 cursor-pointer z-20 pointer-events-none"
         />
 
-        {/* Maximum thumb */}
         <input
           type="range"
           data-type="max"
@@ -178,21 +248,36 @@ const PriceRangeFilter = React.memo(({ min, max, currentMin, currentMax, onChang
           max={rangeMax.current}
           value={currentMax}
           onChange={handleRangeChange}
-          className="absolute top-0 left-0 w-full h-2 opacity-0 cursor-pointer z-10"
-        />
-
-        {/* Thumb indicators */}
-        <div
-          className="absolute top-1/2 h-6 w-6 bg-[#C3974C] rounded-full border-4 border-white shadow-lg transform -translate-y-1/2 z-30"
-          style={{ left: `${((currentMin - rangeMin.current) / (rangeMax.current - rangeMin.current)) * 100}%` }}
-        />
-        <div
-          className="absolute top-1/2 h-6 w-6 bg-[#C3974C] rounded-full border-4 border-white shadow-lg transform -translate-y-1/2 z-30"
-          style={{ left: `${((currentMax - rangeMin.current) / (rangeMax.current - rangeMin.current)) * 100}%` }}
+          className="absolute top-0 left-0 w-full h-2 opacity-0 cursor-pointer z-10 pointer-events-none"
         />
       </div>
 
-      {/* Price Display */}
+      {/* Input Fields - Min va Max */}
+      {/* <div className="flex items-center gap-3">
+        <div className="flex-1">
+          <label className="block text-xs text-gray-600 mb-1">Мин ₽</label>
+          <input
+            type="number"
+            value={currentMin}
+            onChange={(e) => handleInputChange('min', e.target.value)}
+            min={rangeMin.current}
+            max={currentMax - MIN_GAP}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C3974C] focus:border-transparent text-sm"
+          />
+        </div>
+        <div className="text-gray-400 mt-5">—</div>
+        <div className="flex-1">
+          <label className="block text-xs text-gray-600 mb-1">Макс ₽</label>
+          <input
+            type="number"
+            value={currentMax}
+            onChange={(e) => handleInputChange('max', e.target.value)}
+            min={currentMin + MIN_GAP}
+            max={rangeMax.current}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C3974C] focus:border-transparent text-sm"
+          />
+        </div>
+      </div> */}
       <div className="p-3 bg-gradient-to-br from-[#FDF9F2] to-[#F5EDE2] rounded-lg">
         <p className="text-center text-sm font-medium text-gray-700">
           {currentMin.toLocaleString('ru-RU')} ₽ - {currentMax.toLocaleString('ru-RU')} ₽

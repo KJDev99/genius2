@@ -76,7 +76,7 @@ export default function Footer() {
         </div>
 
         <div className="text-sm text-[#272727] max-md:hidden">
-          <p className="mb-[16px] font-normal text-lg leading-[120%] tracking-[-6%]">Почта поддержки:</p>
+          <p className="mb-[16px] font-normal text-lg leading-[120%] tracking-[-6%]">Почта поддержки</p>
           <a
             href="mailto:info@geniuselectro.ru"
             className="inline-flex items-center gap-1 font-normal text-lg leading-[180%] tracking-[-4%] hover:text-[#C3974C] transition-colors"
@@ -97,7 +97,7 @@ export default function Footer() {
             </a>
           </div>
           <div className="text-sm text-[#272727]">
-            <p className="mb-[16px] font-normal text-lg leading-[120%] tracking-[-6%]">Почта поддержки:</p>
+            <p className="mb-[16px] font-normal text-lg leading-[120%] tracking-[-6%]">Почта поддержки</p>
             <a
               href="mailto:info@geniuselectro.ru"
               className="inline-flex items-center gap-1 font-normal leading-[180%] tracking-[-4%] hover:text-[#C3974C] transition-colors"

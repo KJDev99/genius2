@@ -97,12 +97,16 @@ export default function Login() {
           </button>
         </div>
 
-        <div className='mb-[16px]'>
+        <div className='flex mb-4 justify-between items-center flex-wrap gap-2'>
+
+          <p className='font-normal text-[14px] md:text-[16px] leading-[120%] tracking-[-0.02em] text-[#27272799]'>
+            Забыли пароль?
+          </p>
           <Link
             href={'/auth/forgot-password'}
-            className="font-normal text-[14px] text-[#27272799] hover:text-[#C9A76B] transition-colors"
+            className="font-inter hover:underline font-normal text-[14px] md:text-[16px] leading-[120%] tracking-[-0.02em] bg-gradient-to-r from-[#D8C19A] via-[#D8C19A] to-[#C3974C] bg-clip-text text-transparent"
           >
-            Забыли пароль?
+            Восстановить
           </Link>
         </div>
 

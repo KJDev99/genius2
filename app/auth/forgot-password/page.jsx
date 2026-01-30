@@ -38,7 +38,7 @@ export default function ForgotPassword() {
 
             // Redirect to info page
             setTimeout(() => {
-                router.push('/auth/reset-password-sent')
+                router.push('/auth/login')
             }, 2000)
         } else {
             const errorMessage = result?.email?.[0] ||

@@ -257,7 +257,7 @@ export default function PopUpModal({ setOpen }) {
                 onChange={handleInputChange}
                 className="w-5 h-5 rounded border border-[#27272733] accent-black focus:ring-0 flex-shrink-0 mt-0.5 lg:mt-0"
               />
-              <span>Согласен с политикой конфиденциальности</span>
+              <span>Согласен с <a className='underline' target='_blank' href="">политикой конфиденциальности</a></span>
             </motion.label>
 
             <motion.div

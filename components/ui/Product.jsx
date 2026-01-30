@@ -41,7 +41,6 @@ export default function Product({
     }, []);
 
 
-    // Komponent mount bo'lganda like holatini tekshirish
     useEffect(() => {
         setIsLiked(isFavorite(id));
     }, [id, isFavorite]);
@@ -62,10 +61,7 @@ export default function Product({
             const result = await toggleFavorite(id);
 
             if (result?.success) {
-                // Muvaffaqiyatli bo'lsa, local state yangilash
                 setIsLiked(!isLiked);
-
-                // Agar API muvaffaqiyatsiz bo'lsa, local storage'ni yangilash
                 if (!result.success) {
                     if (isLiked) {
                         removeLocalFavorite(id);
@@ -215,20 +211,35 @@ export default function Product({
                             </button>
                         </div>
                     }
+                    {
+                        isLoggedIn ? <Button
+                            className={`h-[54px] w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${isHovered
+                                ? 'bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] !text-white'
+                                : 'bg-[#EFEFEF] !text-[#8E8E8E]'
+                                } ${buttonText !== 'В корзину' ? 'grow' : 'grow-0'}`}
 
-                    <Button
-                        className={`h-[54px] w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${isHovered
-                            ? 'bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] !text-white'
-                            : 'bg-[#EFEFEF] !text-[#8E8E8E]'
-                            } ${buttonText !== 'В корзину' ? 'grow' : 'grow-0'}`}
+                            text={buttonText || 'В корзину'}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleAddToCart();
+                            }}
+                        /> :
 
-                        text={buttonText || 'В корзину'}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleAddToCart();
-                        }}
-                    />
+                            <Button
+                                className={`h-[54px] w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${isHovered
+                                    ? 'bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] !text-white'
+                                    : 'bg-[#EFEFEF] !text-[#8E8E8E]'
+                                    } ${buttonText !== 'В корзину' ? 'grow' : 'grow-0'}`}
+
+                                text={buttonText || 'В корзину'}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    router.push('/auth/login');
+                                }}
+                            />
+                    }
                 </div>
             </div>
         </Link>

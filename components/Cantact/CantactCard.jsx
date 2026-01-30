@@ -42,7 +42,7 @@ const ContactCard = () => {
         {/* Address */}
         <div className="mb-6">
           <p className="font-normal text-[16px] leading-[18px] tracking-[0] text-[#272727] mb-[16px] max-sm:text-[14px] max-sm:mb-[12px]">
-            Находится по адресу:
+            Находится по адрес
           </p>
           <p className="font-normal text-[20px] max-sm:text-[16px] leading-[130%] tracking-[0] mb-[32px]">
             {contactData.full_address || `${contactData.zip_code}, г. ${contactData.city}, ул. ${contactData.street}, д. ${contactData.building_number}, оф. ${contactData.office_number}`}
@@ -53,7 +53,7 @@ const ContactCard = () => {
         <div className="flex md:gap-[49px] max-sm:gap-[32px] mb-[32px]">
           <div>
             <p className="font-normal text-[16px] leading-[18px] tracking-[0] text-gray-600 mb-[16px] max-sm:text-[14px] max-sm:mb-[12px]">
-              Телефон:
+              Телефон
             </p>
             <a
               href={`tel:${contactData.phone?.replace(/\s/g, '')}`}
@@ -64,7 +64,7 @@ const ContactCard = () => {
           </div>
           <div>
             <p className="font-normal text-[16px] leading-[18px] tracking-[0] text-gray-600 mb-[16px] max-sm:text-[14px] max-sm:mb-[12px]">
-              E-mail:
+              E-mail
             </p>
             <a
               href={`mailto:${contactData.email}`}
@@ -79,7 +79,7 @@ const ContactCard = () => {
         <div className="flex justify-between max-sm:flex-col max-sm:gap-[32px]">
           <div>
             <h2 className="font-normal text-[16px] leading-[18px] tracking-[0] text-[#272727] mb-[12px] max-sm:text-[14px]">
-              Режим работы:
+              Режим работы
             </h2>
             <p className="font-normal text-[20px] max-sm:text-[16px] leading-[130%] tracking-[0]">
               {contactData.working_hours_weekday}

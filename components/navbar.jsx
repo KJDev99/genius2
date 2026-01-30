@@ -102,6 +102,13 @@ export default function Navbar() {
                     onMouseLeave={() => setCatalogOpen(false)}
                   >
                     <div className="py-4 px-2 max-h-80 overflow-y-auto">
+                      <Link
+                        href="/catalog"
+                        onClick={() => setCatalogOpen(false)}
+                        className="block py-2 px-3 rounded-lg hover:bg-gray-100 transition-colors duration-200 mb-1 border-b border-gray-50"
+                      >
+                        <div className="">Все Каталог</div>
+                      </Link>
                       {loading ? (
                         <div className="py-2 px-3 text-center text-gray-500">Загрузка...</div>
                       ) : categories.length > 0 ? (

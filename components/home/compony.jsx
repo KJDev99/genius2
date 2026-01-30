@@ -1,11 +1,12 @@
+import Link from 'next/link'
 import React from 'react'
 
 export default function Compony() {
   return (
     <div className='max-sm:ml-[16px] max-sm:mr-[16px] max-w-[1340px] m-auto mt-[100px] max-sm:flex-col  flex  justify-between max-md:mt-[50px]'>
-      <div>
+      <Link href='/about'>
         <h1 className=' text-[#27272799] font-normal text-[18px] leading-[100%] tracking-[-0.04em] max-sm:text-[16px] max-md:mb-6'>О компании</h1>
-      </div>
+      </Link>
       <div className='max-sm:w-[340px] w-[664px]'>
         <h2 className='font-normal mb-[24px] max-sm:text-[24px] text-[32px] leading-[42px] tracking-[-0.04em] max-md:leading-[30px] max-md:mb-4'>Genius Electro - ваш надёжный партнёр
           в сфере кабельной продукции</h2>

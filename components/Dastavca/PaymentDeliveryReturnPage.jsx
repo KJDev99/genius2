@@ -3,9 +3,9 @@
 export default function PaymentDeliveryReturnPage() {
   return (
     <div className="max-w-[1340px] m-auto mt-[100px] px-4 sm:px-8 lg:px-16">
-      <div className='grid grid-cols-1 sm:grid-cols-3'>
+      <div className='grid grid-cols-1 sm:grid-cols-4'>
         <h2 className='  font-normal text-[24px] leading-[100%] tracking-[-0.04em] sm:text-[32px]'>Способы оплаты</h2>
-        <div className='col-span-2'>
+        <div className='col-span-3'>
           <p className=' font-normal text-[18px] leading-[120%] tracking-[-0.02em] mb-6 sm:text-[24px] max-sm:mt-[24px]'>Мы предлагаем несколько удобных способов оплаты, чтобы вы могли выбрать наиболее подходящий:</p>
           <h2 className='font-normal text-[16px] leading-[120%] tracking-[-0.02em] text-[#272727] mb-6 sm:text-[18px]'>Банковская карта (Visa, MasterCard, МИР)</h2>
           <p className='text-[#272727] font-normal text-[14px] leading-[130%] tracking-[-0.02em] mb-6'>Оплата возможна непосредственно на сайте через защищённый платежный шлюз. Все данные надежно зашифрованы и не передаются третьим лицам.</p>
@@ -18,9 +18,9 @@ export default function PaymentDeliveryReturnPage() {
           <h2 className='font-normal text-[18px] leading-[120%] tracking-[-0.02em] sm:text-[24px]'>Если у вас возникли вопросы по оплате или требуется индивидуальное коммерческое предложение, наши менеджеры всегда готовы проконсультировать вас.</h2>
         </div>
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-3 mt-[50px] sm:mt-[64px]'>
+      <div className='grid grid-cols-1 sm:grid-cols-4 mt-[50px] sm:mt-[64px]'>
         <h2 className='  font-normal text-[24px] leading-[100%] tracking-[-0.04em] sm:text-[32px]'>Способы оплаты</h2>
-        <div className='col-span-2'>
+        <div className='col-span-3'>
           <p className=' font-normal text-[18px] leading-[120%] tracking-[-0.02em] mb-6 sm:text-[24px] max-sm:mt-[24px]'>Способы доставки:</p>
           <h2 className='font-normal text-[16px] leading-[120%] tracking-[-0.02em] text-[#272727] mb-6 sm:text-[18px]'>Курьерская доставка по городу</h2>
           <p className='text-[#272727] font-normal text-[14px] leading-[130%] tracking-[-0.02em] mb-6'>Оперативная доставка до двери в пределах города. Стоимость и сроки уточняются при оформлении заказа.</p>
@@ -36,9 +36,9 @@ export default function PaymentDeliveryReturnPage() {
           <h2 className='font-normal text-[18px] leading-[120%] tracking-[-0.02em] sm:text-[24px]'>Если у вас возникли вопросы по оплате или требуется индивидуальное коммерческое предложение, наши менеджеры всегда готовы проконсультировать вас.</h2>
         </div>
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-3 mt-[50px] sm:mt-[64px]'>
+      <div className='grid grid-cols-1 sm:grid-cols-4 mt-[50px] sm:mt-[64px]'>
         <h2 className='  font-normal text-[24px] leading-[100%] tracking-[-0.04em] sm:text-[32px]'>Возврат</h2>
-        <div className='col-span-2'>
+        <div className='col-span-3'>
           <p className=' font-normal text-[18px] leading-[120%] tracking-[-0.02em] mb-6 sm:text-[24px] max-sm:mt-[24px]'>Если по какой-либо причине приобретённый товар не соответствует вашим ожиданиям или имеет производственный дефект, вы имеете возможность оформить его возврат
             в соответствии с действующим законодательством РФ.  </p>
           <h2 className='font-normal text-[18px] leading-[120%] tracking-[-0.02em] sm:text-[24px] text-[#272727] mb-6'>Условия возврата товара надлежащего качества:</h2>
@@ -67,14 +67,14 @@ export default function PaymentDeliveryReturnPage() {
           <p className='font-normal text-[14px] leading-[130%] tracking-[-0.02em] text-[#272727] '>2. В случае возврата товара с заводским браком или ошибочной комплектацией — все расходы по пересылке берёт на себя компания Genius Electro. </p>
           <div>
             <h2 className='font-normal text-[24px] mt-[32px] mb-[24px] leading-[120%] tracking-[-0.02em]'>Контакты для связи</h2>
-            <p className='font-normal text-[18px] leading-[120%] tracking-[-0.02em] mb-[24px]'>Если у вас возникли вопросы по возврату товара, вы всегда можете обратиться в нашу службу поддержки:</p>
-            <div className='grid grid-cols-2 sm:grid-cols-3'>
+            <p className='font-normal text-[18px] leading-[120%] tracking-[-0.02em] mb-[24px]'>Если у вас возникли вопросы по возврату товара, вы всегда можете обратиться в нашу службу поддержки</p>
+            <div className='grid grid-cols-2 sm:grid-cols-4'>
               <div>
-                <h2 className='font-normal text-[14px] leading-[120%] tracking-[-0.01em] text-[#272727] mb-[12px]'>Телефон:</h2>
+                <h2 className='font-normal text-[14px] leading-[120%] tracking-[-0.01em] text-[#272727] mb-[12px]'>Телефон</h2>
                 <p className='font-normal text-[18px] leading-[120%] tracking-[-0.02em]'>+7 (921) 111-89-23</p>
               </div>
               <div>
-                <h2 className='font-normal text-[14px] leading-[120%] tracking-[-0.01em] text-[#272727] mb-[12px]'>E-mail:</h2>
+                <h2 className='font-normal text-[14px] leading-[120%] tracking-[-0.01em] text-[#272727] mb-[12px]'>E-mail</h2>
                 <p className='font-normal text-[18px] leading-[120%] tracking-[-0.02em]'>info@geniuselectro.ru</p>
               </div>
               <div>
