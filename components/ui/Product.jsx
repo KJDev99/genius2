@@ -211,7 +211,7 @@ export default function Product({
                             </button>
                         </div>
                     }
-                    {
+                    {/* {
                         isLoggedIn ? <Button
                             className={`h-[54px] w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${isHovered
                                 ? 'bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] !text-white'
@@ -239,7 +239,20 @@ export default function Product({
                                     router.push('/auth/login');
                                 }}
                             />
-                    }
+                    } */}
+                    <Button
+                        className={`h-[54px] w-[135px] transition-all duration-300 max-md:h-[33px] max-md:w-[77px] max-md:rounded-[6px] max-md:text-[8px] ${isHovered
+                            ? 'bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] !text-white'
+                            : 'bg-[#EFEFEF] !text-[#8E8E8E]'
+                            } ${buttonText !== 'В корзину' ? 'grow' : 'grow-0'}`}
+
+                        text={buttonText || 'В корзину'}
+                    // onClick={(e) => {
+                    //     e.preventDefault();
+                    //     e.stopPropagation();
+                    //     handleAddToCart();
+                    // }}
+                    />
                 </div>
             </div>
         </Link>

@@ -6,12 +6,14 @@ import { FaArrowUp } from "react-icons/fa";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useApiStore } from '@/store/useApiStore';
+import { AnimatePresence } from 'framer-motion';
+import PopUpModal from './pop-up-modal';
 
 export default function Footer() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const { getData } = useApiStore();
-
+  const [open, setOpen] = useState(false)
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -48,6 +50,7 @@ export default function Footer() {
     <footer className="border-t border-[#2727271A] mt-[120px] max-md:mt-[50px]">
       <div className="max-w-[1340px] mx-auto px-4 py-[48px] flex justify-between items-start max-md:flex-col max-md:py-6">
         <Button
+          onClick={() => setOpen(true)}
           text={'Заказать звонок'}
           className={`w-[203px] rounded-[12px] h-[51px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] max-md:w-full`}
         />
@@ -108,6 +111,9 @@ export default function Footer() {
         </div>
       </div>
 
+      <AnimatePresence>
+        {open && <PopUpModal setOpen={setOpen} />}
+      </AnimatePresence>
       <div className="border-t border-[#2727271A]" />
 
       <div className="max-w-[1340px] mx-auto px-4 py-[82px] grid grid-cols-5 gap-10 max-md:py-8 max-md:grid-cols-2">
