@@ -99,13 +99,13 @@ export default function Hero() {
   };
 
   return (
-    <div className="mt-[32px] px-4 lg:px-8 max-md:mt-4">
+    <div className="mt-[32px] px-4 lg:px-8 max-md:mt-0">
       <div
         className="relative max-w-[1340px] mx-auto h-[761px] rounded-[32px] 
                    bg-cover bg-center bg-[url('/headerimg.png')]
                    flex flex-col justify-center items-center
                    text-center
-                   sm:h-[700px] md:h-[761px] max-sm:h-[736px]"
+                   sm:h-[700px] md:h-[761px] max-sm:h-[700px] max-md:rounded-[24px]"
       >
         <div className="absolute inset-0 rounded-[32px] bg-gradient-to-t from-[#40404080] to-[rgba(67,67,67,0.2)]"></div>
         <div className="relative z-10 px-4 max-w-full max-md:w-full">

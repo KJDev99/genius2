@@ -126,14 +126,14 @@ export default function PopUpModal({ setOpen }) {
         </motion.div>
 
         <motion.div
-          className='flex-1 p-6 lg:pr-12 lg:py-12'
+          className='flex-1 p-0 lg:pr-8 lg:py-8'
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className='flex justify-between items-center mb-6 lg:mb-8'>
             <motion.h2
-              className='font-normal text-[24px] lg:text-[32px] leading-[1.3] tracking-[-0.04em]'
+              className='font-normal text-[24px] lg:text-[28px] leading-[1.3] tracking-[-0.04em]'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -146,7 +146,7 @@ export default function PopUpModal({ setOpen }) {
               onClick={() => setOpen(false)}
               className="cursor-pointer"
             >
-              <IoCloseOutline size={28} className="lg:text-[32px]" />
+              <IoCloseOutline size={28} className="lg:text-[28px]" />
             </motion.button>
           </div>
 
@@ -157,7 +157,7 @@ export default function PopUpModal({ setOpen }) {
               transition={{ delay: 0.35 }}
             >
               <input
-                className='px-[20px] lg:px-[24px] outline-none w-full h-[56px] lg:h-[67px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors'
+                className='px-[20px] lg:px-[24px] outline-none w-full h-[52px] lg:h-[60px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors'
                 type="text"
                 placeholder='Имя *'
                 name="name"
@@ -173,7 +173,7 @@ export default function PopUpModal({ setOpen }) {
               transition={{ delay: 0.4 }}
             >
               <input
-                className='px-[20px] lg:px-[24px] outline-none w-full mt-[16px] lg:mt-[24px] h-[56px] lg:h-[67px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors'
+                className='px-[20px] lg:px-[24px] outline-none w-full mt-[16px] lg:mt-[18px] h-[52px] lg:h-[60px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors'
                 type="tel"
                 placeholder='+7 (___) ___-__-__ *'
                 name="phone"
@@ -189,7 +189,7 @@ export default function PopUpModal({ setOpen }) {
               transition={{ delay: 0.45 }}
             >
               <input
-                className='px-[20px] lg:px-[24px] outline-none w-full mt-[16px] lg:mt-[24px] h-[56px] lg:h-[67px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors'
+                className='px-[20px] lg:px-[24px] outline-none w-full mt-[16px] lg:mt-[18px] h-[52px] lg:h-[60px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors'
                 type="email"
                 placeholder='Email'
                 name="email"
@@ -204,7 +204,7 @@ export default function PopUpModal({ setOpen }) {
               transition={{ delay: 0.5 }}
             >
               <textarea
-                className='px-[20px] lg:px-[24px] py-[16px] outline-none w-full mt-[16px] lg:mt-[24px] h-[100px] lg:h-[67px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors resize-none'
+                className='px-[20px] lg:px-[24px] py-[16px] outline-none w-full mt-[16px] lg:mt-[18px] h-[100px] lg:h-[60px] rounded-[12px] border-[1px] border-[#27272733] focus:border-[#C9A76B] transition-colors resize-none'
                 placeholder='Комментарий'
                 name="comment"
                 value={formData.comment}
@@ -213,7 +213,7 @@ export default function PopUpModal({ setOpen }) {
             </motion.div>
 
             <motion.p
-              className='font-normal text-[14px] lg:text-[18px] leading-[130%] tracking-[-0.04em] text-[#27272799] mt-[12px] lg:mt-[16px]'
+              className='font-normal text-[14px] lg:text-[18px] leading-[130%] tracking-[-0.04em] text-[#27272799] mt-[8px] lg:mt-[12px]'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.55 }}
@@ -222,7 +222,7 @@ export default function PopUpModal({ setOpen }) {
             </motion.p>
 
             <motion.div
-              className='flex w-full lg:w-[206px] h-[56px] lg:h-[67px] border border-[#27272733] rounded-[12px] mt-[16px] lg:mt-[24px] justify-center items-center gap-[6px] cursor-pointer hover:border-[#C9A76B] transition-colors'
+              className='flex w-full lg:w-[206px] h-[52px] lg:h-[60px] border border-[#27272733] rounded-[12px] mt-[16px] lg:mt-[18px] justify-center items-center gap-[6px] cursor-pointer hover:border-[#C9A76B] transition-colors'
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               initial={{ opacity: 0, y: 10 }}
@@ -245,7 +245,7 @@ export default function PopUpModal({ setOpen }) {
             />
 
             <motion.label
-              className="flex mt-[16px] lg:mt-[24px] items-start lg:items-center gap-3 cursor-pointer text-[#6B6B6B] text-sm lg:text-base"
+              className="flex mt-[16px] lg:mt-[18px] items-start lg:items-center gap-3 cursor-pointer text-[#6B6B6B] text-sm lg:text-base"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.65 }}
@@ -268,7 +268,7 @@ export default function PopUpModal({ setOpen }) {
               <Button
                 type="submit"
                 disabled={loading}
-                className={`w-full h-[56px] lg:h-[78px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] mt-[24px] lg:mt-[32px] ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`w-full h-[56px] lg:h-[60px] bg-[linear-gradient(119.47deg,#D8C19A_20.35%,#C3974C_94.16%)] mt-[24px] lg:mt-[32px] ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                 text={loading ? 'Отправка...' : 'Оставить заявку'}
               />
             </motion.div>

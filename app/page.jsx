@@ -13,8 +13,8 @@ export default function page() {
   return (
     <div>
       <Hero />
-      <BuildCableBox />
       <ProductsBox />
+      <BuildCableBox />
       <Compony />
       <Compony2 />
       <Brands />

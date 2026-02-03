@@ -114,7 +114,7 @@ export default function BuildCableBox() {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 mt-[100px] mb-[48px] max-w-[1340px] m-auto">
+      <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center px-4 mt-[100px] mb-[48px] max-w-[1340px] m-auto max-md:mt-[30px]">
         <h2 className="text-[#27272799] sm:text-lg text-base leading-none tracking-[-0.04em] font-normal">
           Продукция
         </h2>

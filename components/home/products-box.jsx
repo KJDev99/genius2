@@ -32,11 +32,11 @@ export default function ProductsBox({ display, text = 'Наши товары' })
   }, []);
 
   return (
-    <section className="mt-[100px] px-4 sm:px-6 lg:px-8 max-md:mt-[50px]">
+    <section className="mt-[100px] px-4 sm:px-6 lg:px-8 max-md:mt-[30px]">
       <div className={`max-w-[1340px] mx-auto`}>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end md:gap-6 mb-12 max-md:mb-6">
           <div className={`${display} text-center max-md:text-left`}>
-            <p className="text-[18px] font-normal leading-tight tracking-[-0.04em] text-[#27272799] max-md:mb-6">
+            <p className="text-[18px] font-normal leading-tight tracking-[-0.04em] text-[#27272799] max-md:mb-2">
               {text}
             </p>
           </div>
